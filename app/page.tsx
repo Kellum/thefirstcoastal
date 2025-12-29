@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import Image from 'next/image';
 import { getServices } from '@/lib/sanity';
 
 export default async function Home() {
@@ -6,28 +7,43 @@ export default async function Home() {
 
   return (
     <div className="min-h-screen">
-      {/* Hero Section */}
-      <section className="relative h-[90vh] flex items-center justify-center bg-gradient-to-b from-white to-[#F0F4F5]">
-        <div className="max-w-4xl mx-auto px-6 text-center">
-          <h1 className="text-6xl md:text-7xl font-bold text-[#222326] mb-6">
-            Home
+      {/* Hero Section with Background Image */}
+      <section className="relative h-[90vh] flex items-center justify-center overflow-hidden">
+        {/* Background Image */}
+        <div className="absolute inset-0 z-0">
+          <Image
+            src="/hero-jax-pier.jpg"
+            alt="Jacksonville Beach Pier at sunset - First Coast"
+            fill
+            priority
+            quality={90}
+            className="object-cover object-center"
+          />
+          {/* Dark gradient overlay for text readability */}
+          <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-black/40 to-black/60" />
+        </div>
+
+        {/* Content */}
+        <div className="relative z-10 max-w-4xl mx-auto px-6 text-center">
+          <h1 className="text-5xl md:text-7xl font-bold text-white mb-6 drop-shadow-2xl">
+            Where Coastal Creativity Meets Digital Excellence
           </h1>
-          <p className="text-xl md:text-2xl text-[#3B3C40] mb-8 font-light">
-            Northeast Florida&apos;s premier marketing agency
+          <p className="text-xl md:text-2xl text-white/95 mb-8 font-light drop-shadow-lg">
+            Northeast Florida&apos;s Premier Marketing Agency
           </p>
-          <p className="text-lg text-gray-500 mb-12 max-w-2xl mx-auto">
-            We craft exceptional digital experiences through web design, development, SEO, and social media marketing. Based in the First Coast, serving businesses across Northeast Florida.
+          <p className="text-lg text-white/90 mb-12 max-w-2xl mx-auto drop-shadow-lg">
+            We craft exceptional digital experiences through web design, development, SEO, and social media marketing. Rooted in the First Coast, serving businesses across Northeast Florida.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link
               href="/work"
-              className="px-8 py-4 bg-[#5D878C] text-white rounded-lg hover:bg-[#385154] transition-colors duration-200 font-medium shadow-md hover:shadow-lg"
+              className="px-8 py-4 bg-white/95 text-[#222326] rounded-lg hover:bg-white transition-all duration-200 font-medium shadow-xl hover:shadow-2xl hover:scale-105"
             >
               View Our Work
             </Link>
             <Link
               href="/contact"
-              className="px-8 py-4 bg-[#BFB195] text-[#222326] rounded-lg hover:brightness-95 transition-all duration-200 font-medium shadow-md hover:shadow-lg"
+              className="px-8 py-4 bg-[#5D878C] text-white rounded-lg hover:bg-[#385154] transition-all duration-200 font-medium shadow-xl hover:shadow-2xl hover:scale-105"
             >
               Get In Touch
             </Link>
