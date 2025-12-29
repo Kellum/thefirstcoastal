@@ -11,13 +11,10 @@ export default async function Home() {
       <section className="relative h-[90vh] flex items-center justify-center overflow-hidden">
         {/* Background Image */}
         <div className="absolute inset-0 z-0">
-          <Image
+          <img
             src="/hero-jax-pier.jpg"
             alt="Jacksonville Beach Pier at sunset - First Coast"
-            fill
-            priority
-            quality={90}
-            className="object-cover object-center"
+            className="w-full h-full object-cover object-center"
           />
           {/* Dark gradient overlay for text readability */}
           <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-black/40 to-black/60" />
