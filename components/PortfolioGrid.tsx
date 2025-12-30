@@ -2,6 +2,8 @@
 
 import { useState } from 'react';
 import PortfolioCard from '@/components/PortfolioCard';
+import WebsiteShowcase from '@/components/WebsiteShowcase';
+import SocialMediaShowcase from '@/components/SocialMediaShowcase';
 import { urlFor } from '@/lib/sanity';
 
 interface PortfolioItem {
@@ -12,6 +14,7 @@ interface PortfolioItem {
   description: string;
   tags: string[];
   images?: any[];
+  projectType?: 'website' | 'social-media' | 'other';
 }
 
 interface PortfolioGridProps {
@@ -56,17 +59,56 @@ export default function PortfolioGrid({ items }: PortfolioGridProps) {
       <section className="py-20 bg-white">
         <div className="max-w-7xl mx-auto px-6">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {filteredItems.map((item) => (
-              <PortfolioCard
-                key={item._id}
-                title={item.title}
-                slug={item.slug}
-                category={item.client}
-                description={item.description}
-                tags={item.tags || []}
-                image={item.images?.[0] ? urlFor(item.images[0]).width(800).height(600).url() : undefined}
-              />
-            ))}
+            {filteredItems.map((item) => {
+              const imageUrl = item.images?.[0] ? urlFor(item.images[0]).width(800).height(600).url() : undefined;
+              const imageObjects = item.images?.map(img => ({
+                url: urlFor(img).width(800).height(600).url(),
+                asset: img
+              }));
+
+              // Render different components based on project type
+              if (item.projectType === 'website') {
+                return (
+                  <WebsiteShowcase
+                    key={item._id}
+                    title={item.title}
+                    slug={item.slug}
+                    category={item.client}
+                    description={item.description}
+                    tags={item.tags || []}
+                    image={imageUrl}
+                    images={imageObjects}
+                  />
+                );
+              } else if (item.projectType === 'social-media') {
+                return (
+                  <SocialMediaShowcase
+                    key={item._id}
+                    title={item.title}
+                    slug={item.slug}
+                    category={item.client}
+                    description={item.description}
+                    tags={item.tags || []}
+                    image={imageUrl}
+                    images={imageObjects}
+                  />
+                );
+              } else {
+                // Default fallback to PortfolioCard
+                return (
+                  <PortfolioCard
+                    key={item._id}
+                    title={item.title}
+                    slug={item.slug}
+                    category={item.client}
+                    description={item.description}
+                    tags={item.tags || []}
+                    image={imageUrl}
+                    projectType={item.projectType}
+                  />
+                );
+              }
+            })}
           </div>
 
           {filteredItems.length === 0 && (

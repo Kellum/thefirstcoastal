@@ -41,7 +41,8 @@ export async function getPortfolioItems() {
       completedDate,
       images,
       tags,
-      featured
+      featured,
+      projectType
     }`
   );
 }
@@ -59,7 +60,8 @@ export async function getPortfolioItem(slug: string) {
       completedDate,
       images,
       tags,
-      featured
+      featured,
+      projectType
     }`,
     { slug }
   );

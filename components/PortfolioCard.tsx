@@ -1,8 +1,8 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { useState } from 'react';
 import Link from 'next/link';
+import { getTagColor } from '@/lib/tagColors';
 
 interface PortfolioCardProps {
   title: string;
@@ -11,6 +11,7 @@ interface PortfolioCardProps {
   image?: string;
   tags: string[];
   slug: string;
+  projectType?: 'website' | 'social-media' | 'other';
 }
 
 export default function PortfolioCard({
@@ -21,70 +22,57 @@ export default function PortfolioCard({
   tags,
   slug
 }: PortfolioCardProps) {
-  const [isHovered, setIsHovered] = useState(false);
-
   return (
-    <Link href={`/work/${slug}`} className="block">
-      <motion.div
-        className="relative cursor-pointer overflow-hidden rounded-lg aspect-[4/3]"
-        onMouseEnter={() => setIsHovered(true)}
-        onMouseLeave={() => setIsHovered(false)}
-        whileHover={{ y: -8 }}
-        transition={{ duration: 0.3 }}
-      >
-        {/* Background - Image with overlay or gradient fallback */}
-        {image ? (
-          <>
-            <div
-              className="absolute inset-0 bg-cover bg-center"
-              style={{ backgroundImage: `url(${image})` }}
-            />
-            {/* Dark overlay for better text contrast */}
-            <div className="absolute inset-0 bg-gradient-to-br from-[#222326]/40 to-[#222326]/60" />
-          </>
-        ) : (
-          <div className="absolute inset-0 bg-gradient-to-br from-[#8DB1B6] to-[#4A6C70]" />
-        )}
-
-        {/* Hover Overlay */}
+    <div>
+      <Link href={`/work/${slug}`} className="block group">
         <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: isHovered ? 1 : 0 }}
+          className="relative cursor-pointer overflow-hidden rounded-lg aspect-[4/3]"
+          whileHover={{ y: -8 }}
           transition={{ duration: 0.3 }}
-          className="absolute inset-0 bg-[#222326] bg-opacity-95 flex flex-col justify-center items-center p-6 text-white"
         >
-          <span className="text-sm uppercase tracking-wider text-[#BFB195] mb-2">
-            {category}
+          {/* Background Image */}
+          {image ? (
+            <>
+              <div
+                className="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-105"
+                style={{ backgroundImage: `url(${image})` }}
+              />
+              {/* Overlay for better contrast */}
+              <div className="absolute inset-0 bg-gradient-to-br from-[#222326]/20 to-[#222326]/40" />
+            </>
+          ) : (
+            <div className="absolute inset-0 bg-gradient-to-br from-[#8DB1B6] to-[#4A6C70]" />
+          )}
+
+          {/* Subtle Hover Overlay */}
+          <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300 rounded-lg pointer-events-none" />
+        </motion.div>
+      </Link>
+
+      {/* Tags Between Card and Title */}
+      <div className="mt-3 px-1 flex flex-wrap gap-1.5">
+        {tags.slice(0, 3).map((tag, index) => (
+          <span
+            key={index}
+            className={`px-2 py-1 rounded text-[10px] font-medium border ${getTagColor(tag)}`}
+          >
+            {tag}
           </span>
-          <h3 className="text-2xl font-bold mb-3 text-center">{title}</h3>
-          <p className="text-gray-300 text-center mb-4 text-sm leading-relaxed">
-            {description}
-          </p>
-          <div className="flex flex-wrap gap-2 justify-center">
-            {tags.map((tag, index) => (
-              <span
-                key={index}
-                className="px-3 py-1 bg-[#BFB195] bg-opacity-30 border border-[#BFB195] text-[#BFB195] rounded-full text-xs font-medium"
-              >
-                {tag}
-              </span>
-            ))}
-          </div>
-        </motion.div>
+        ))}
+        {tags.length > 3 && (
+          <span className="px-2 py-1 rounded text-[10px] font-medium bg-gray-100 text-gray-600 border border-gray-200">
+            +{tags.length - 3}
+          </span>
+        )}
+      </div>
 
-        {/* Bottom badge (visible when not hovered) */}
-        <motion.div
-          initial={{ opacity: 1 }}
-          animate={{ opacity: isHovered ? 0 : 1 }}
-          transition={{ duration: 0.3 }}
-          className="absolute bottom-6 left-6 right-6"
-        >
-          <div className="bg-white rounded-lg p-4 shadow-xl">
-            <p className="text-xs uppercase tracking-wider text-[#5D878C] font-semibold mb-1">{category}</p>
-            <h3 className="text-xl font-bold text-[#222326]">{title}</h3>
-          </div>
-        </motion.div>
-      </motion.div>
-    </Link>
+      {/* Title and Description Below Tags */}
+      <div className="mt-2 px-1">
+        <h3 className="text-base font-semibold text-[#222326] group-hover:text-[#5D878C] transition-colors">
+          {title}
+        </h3>
+        <p className="text-sm text-gray-500 mt-0.5 line-clamp-2">{description}</p>
+      </div>
+    </div>
   );
 }

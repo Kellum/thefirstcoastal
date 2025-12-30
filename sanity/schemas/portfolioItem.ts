@@ -77,6 +77,21 @@ export default defineType({
       },
     }),
     defineField({
+      name: 'projectType',
+      title: 'Project Type',
+      type: 'string',
+      options: {
+        list: [
+          { title: 'Website/Web App', value: 'website' },
+          { title: 'Social Media', value: 'social-media' },
+          { title: 'Other', value: 'other' },
+        ],
+        layout: 'radio',
+      },
+      initialValue: 'other',
+      validation: (Rule) => Rule.required(),
+    }),
+    defineField({
       name: 'featured',
       title: 'Featured',
       type: 'boolean',
