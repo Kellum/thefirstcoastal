@@ -1,18 +1,17 @@
 import { createClient } from 'next-sanity';
 import { createImageUrlBuilder } from '@sanity/image-url';
 
-const projectId = process.env.NEXT_PUBLIC_SANITY_PROJECT_ID;
+// Use environment variables with fallback for build time
+// Railway will have these available at runtime
+const projectId = process.env.NEXT_PUBLIC_SANITY_PROJECT_ID || 'y0gns0g3';
 const dataset = process.env.NEXT_PUBLIC_SANITY_DATASET || 'production';
-
-if (!projectId) {
-  throw new Error('Missing NEXT_PUBLIC_SANITY_PROJECT_ID environment variable');
-}
+const apiVersion = process.env.NEXT_PUBLIC_SANITY_API_VERSION || '2024-01-01';
 
 export const client = createClient({
   projectId,
   dataset,
-  apiVersion: '2024-01-01',
-  useCdn: true, // Set to false if you want fresh data (but slower)
+  apiVersion,
+  useCdn: true,
 });
 
 // Image URL builder
