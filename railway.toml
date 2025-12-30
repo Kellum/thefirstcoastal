@@ -3,3 +3,13 @@ builder = "nixpacks"
 
 [deploy]
 startCommand = "npm run start"
+
+# Ensure environment variables are available during build
+[[build.env]]
+name = "NEXT_PUBLIC_SANITY_PROJECT_ID"
+
+[[build.env]]
+name = "NEXT_PUBLIC_SANITY_DATASET"
+
+[[build.env]]
+name = "NEXT_PUBLIC_SANITY_API_VERSION"
