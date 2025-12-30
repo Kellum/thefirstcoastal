@@ -1,99 +1,152 @@
 # Development Checkpoint - December 29, 2024
 
-## Session: Brand Design System & Visual Identity
+## Session: Vercel Deployment & Hero Image Integration
 
-**Tags:** `#design` `#branding` `#ui` `#colors` `#typography` `#assets`
+**Tags:** `#deployment` `#vercel` `#hero` `#photography` `#optimization` `#production`
 
 ---
 
 ## Session Goals
 
-1. Implement brand color standards from Adobe Color palette
-2. Create comprehensive design system documentation
-3. Fix button and CTA visibility issues
-4. Add logo to navigation
-5. Implement clean typography (Montserrat font)
-6. Enhance portfolio cards with background images
+1. Conduct full site audit and determine hosting platform
+2. Deploy site to Vercel production
+3. Configure Sanity CORS for production domains
+4. Implement custom hero image with photographer's coastal photography
+5. Optimize images for web performance
 
 ---
 
 ## Work Completed
 
-### 1. Design System Documentation
-- Created `DESIGN_SYSTEM.md` with comprehensive brand guidelines
-- Documented 5 core brand colors with hex values, usage guidelines, and color psychology
-- Defined CTA hierarchy (Primary, Secondary, Tertiary) with proper color theory application
-- Added typography specifications including Montserrat font weights and scale
-- Included logo guidelines and asset locations
+### 1. Comprehensive Site Audit
+- **Created:** `current-audit-2025-12-29.md` - full technical documentation
+- **Analyzed:** Architecture (JAMstack), tech stack, features, CMS integration
+- **Documented:** All pages, components, Sanity schemas, deployment readiness
 
-### 2. Brand Color Implementation
-- **Adobe Color Palette Applied:**
-  - Coastal Teal: `#5D878C` (Primary brand, CTAs)
-  - Charcoal: `#222326` (Primary text, dark backgrounds)
-  - Slate Gray: `#3B3C40` (Secondary text)
-  - Sand Beige: `#BFB195` (Secondary CTAs, accents)
-  - Cream: `#F2F2F0` (Light backgrounds)
+**Key Findings:**
+- ✅ Next.js 14 with fully integrated Sanity CMS
+- ✅ No custom backend needed (pure JAMstack)
+- ✅ 95% production ready
+- ⚠️ Sanity image-url deprecation warning
+- ⚠️ Contact form not functional (simulation only)
+- ⚠️ Multiple dev servers running
 
-- **Color Scale Extensions:**
-  - Created 9-shade scale for Coastal Teal (50-900)
-  - Configured Tailwind with brand colors
+**Platform Recommendation:** **Vercel** (NOT Railway)
+- Next.js is built by Vercel (zero-config deployment)
+- No backend = no Railway advantage
+- Free tier: 100GB bandwidth, unlimited requests
+- Native Sanity integration with webhooks
 
-- **Tailwind Implementation Challenge:**
-  - Initial approach using custom color classes in `tailwind.config.ts`
-  - JIT compiler not generating custom classes despite safelist configuration
-  - **Solution:** Switched to Tailwind arbitrary value syntax with explicit hex codes
-  - Pattern: `bg-[#5D878C]` instead of `bg-coastal`
-  - This ensures colors render regardless of Tailwind configuration
+### 2. Production Deployment to Vercel
 
-### 3. Button & CTA Fixes
-- **Issue:** Buttons appearing transparent/white on light backgrounds
-- **Fixed:**
-  - Primary CTAs: `bg-[#5D878C]` (coastal teal) with `hover:bg-[#385154]`
-  - Secondary CTAs: `bg-[#BFB195]` (sand beige) with `hover:brightness-95`
-  - Updated all pages: home, about, contact, work, FAQ, blog
+**Git Repository Setup:**
+```bash
+git init
+git remote add origin https://github.com/Kellum/thefirstcoastal.git
+git push -u origin main
+```
 
-- **Invalid Color Syntax Cleanup:**
-  - Found and fixed: `text-[#5D878C]-700` → `text-[#385154]`
-  - Fixed hover states: `hover:text-[#5D878C]-600` → `hover:text-[#4A6C70]`
-  - Pattern: Cannot combine arbitrary values with shade suffixes
+**Deployment Process:**
+- Installed Vercel CLI globally
+- Connected project to Vercel via web dashboard
+- Configured environment variables:
+  - `NEXT_PUBLIC_SANITY_PROJECT_ID=y0gns0g3`
+  - `NEXT_PUBLIC_SANITY_DATASET=production`
+  - `NEXT_PUBLIC_SANITY_API_VERSION=2024-01-01`
 
-### 4. Logo Integration
-- **Asset Management:**
-  - Copied logo from `media_assets/the_first_coastal_logo_highres.png` to `/public/logo.png`
-  - Implemented at 50x50px in navigation (upgraded from initial 40x40px)
+**Initial Build Errors:**
+- ❌ Type error in `lib/sanity.ts:3` - invalid Sanity image-url import
+- **Fixed:** Switched from deprecated default export to named export
+  ```typescript
+  // Before (deprecated)
+  import imageUrlBuilder from '@sanity/image-url';
 
-- **Navigation Enhancement:**
-  - Logo + brand name layout with 3-gap spacing
-  - Added group hover effect (text transitions to coastal teal)
-  - Used Next.js Image component for optimization
+  // After (correct)
+  import { createImageUrlBuilder } from '@sanity/image-url';
+  ```
 
-### 5. Typography Implementation
-- **Montserrat Font (Google Fonts):**
-  - Implemented via Next.js `next/font/google` for optimal performance
-  - Weights loaded: 300, 400, 500, 600, 700
-  - Applied site-wide as default font via CSS variable `--font-montserrat`
-  - Updated `globals.css` with font-family fallback stack
+### 3. Sanity CORS Configuration
 
-- **Brand Name Styling:**
-  - Font-semibold (600 weight)
-  - Tracking-tight for modern appearance
-  - Hover transition to coastal teal
+**Issue:** Sanity Studio at `/studio` blocked by CORS on production domains
 
-### 6. Portfolio Card Image Backgrounds
-- **Implementation:**
-  - Updated `PortfolioCard.tsx` to use image prop as background
-  - Background image with dark overlay (40-60% opacity) for text contrast
-  - Gradient fallback (`from-[#8DB1B6] to-[#4A6C70]`) when no image exists
+**Solution:**
+- Added CORS origins in Sanity project settings:
+  - `https://thefirstcoastal.vercel.app` (Vercel URL)
+  - `https://thefirstcoastal.com` (custom domain)
+  - `https://www.thefirstcoastal.com` (www subdomain)
+  - `http://localhost:3000` (local dev)
 
-- **PortfolioGrid Integration:**
-  - Imported `urlFor` from Sanity
-  - Passes first image from portfolio items
-  - Generates optimized image URLs (800x600)
+**Credentials Configuration:**
+- **Public site pages:** Credentials NOT allowed (read-only API access)
+- **Studio route (`/studio`):** Credentials ALLOWED (required for authentication)
+- Enabled "Allow Credentials" for all production domains to support Studio login
 
-- **Card Badge Positioning:**
-  - Offset from `bottom-0` to `bottom-6 left-6 right-6`
-  - Creates floating effect
-  - Reveals more of background image center
+### 4. Hero Image Implementation
+
+**Photography Selection:**
+- Reviewed photographer's coastal work (Jacksonville Beach pier sunset shots)
+- **Selected:** Image #2 - Pier silhouette with golden hour gradient
+- **Style Analysis:**
+  - Long exposure technique
+  - Minimalist composition with strong geometric lines
+  - Warm palette (purples, oranges, pinks)
+  - Professional-grade, iconic First Coast imagery
+
+**Implementation:**
+```typescript
+// app/page.tsx
+<section className="relative h-[90vh] flex items-center justify-center overflow-hidden">
+  <div className="absolute inset-0 z-0">
+    <img
+      src="/hero-jax-pier.jpg"
+      alt="Jacksonville Beach Pier at sunset - First Coast"
+      className="w-full h-full object-cover object-center"
+    />
+    <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-black/40 to-black/60" />
+  </div>
+
+  <div className="relative z-10 max-w-4xl mx-auto px-6 text-center">
+    <h1 className="text-5xl md:text-7xl font-bold text-white mb-6 drop-shadow-2xl">
+      Where Coastal Creativity Meets Digital Excellence
+    </h1>
+    <!-- ... -->
+  </div>
+</section>
+```
+
+**Design Features:**
+- Full-screen background (90vh)
+- Dark gradient overlay (50-60% opacity) for text readability
+- White text with heavy drop shadows
+- Premium button styles with hover scale effects
+- Updated headline positioning
+
+### 5. Image Optimization
+
+**Original File Issue:**
+- **Size:** 7.4MB (too large for web)
+- **Dimensions:** 6720x4480px (excessive resolution)
+- **Result:** Vercel deployment failures, 404 errors
+
+**Optimization Process:**
+```bash
+# Backup original
+cp hero-jax-pier.jpg hero-jax-pier-original.jpg
+
+# Optimize with macOS sips
+sips --resampleWidth 2560 --setProperty formatOptions 85 hero-jax-pier.jpg
+```
+
+**Optimized Result:**
+- **Size:** 475KB (94% reduction)
+- **Dimensions:** 2560x1707px (perfect for 4K displays)
+- **Quality:** 85% compression (maintains visual excellence)
+
+**Image Component Decision:**
+- Initially used Next.js `<Image>` component
+- Encountered 404 errors on Vercel despite successful builds
+- **Solution:** Switched to standard `<img>` tag for reliability
+- Trade-off: Lost automatic WebP conversion but gained consistent deployment
 
 ---
 
@@ -101,11 +154,12 @@
 
 | Decision | Reasoning |
 |----------|-----------|
-| Use Tailwind arbitrary values instead of custom classes | JIT compiler wasn't generating custom color classes; explicit hex values ensure consistent rendering |
-| Montserrat for site-wide typography | Clean, modern, professional font with excellent readability; perfect for marketing agency branding |
-| Dark overlay on portfolio card images | Ensures white badge text remains readable regardless of image content |
-| 50x50px logo size | Provides strong brand presence without overwhelming the navigation |
-| Image fallback to gradient | Graceful degradation for portfolio items without images in CMS |
+| Deploy to Vercel (not Railway) | Pure JAMstack site with no backend needs; Vercel provides optimal Next.js support, free tier, and Sanity integration |
+| Enable CORS credentials for production domains | Required for Sanity Studio authentication at `/studio` route |
+| Use Image #2 (pier sunset) | Clean horizontal composition, iconic First Coast landmark, warm inviting tones, professional quality |
+| Optimize to 2560px width | Balances quality for 4K displays with reasonable file size (475KB) |
+| Use standard `<img>` tag instead of Next.js `<Image>` | Ensured reliable deployment; Next.js Image component caused 404s on Vercel |
+| Dark gradient overlay (50-60%) | Ensures white text readability against varying image brightness |
 
 ---
 
@@ -113,115 +167,144 @@
 
 | Challenge | Solution |
 |-----------|----------|
-| Custom Tailwind colors not rendering after cache clear | Replaced all color class names with Tailwind arbitrary value syntax using explicit hex codes (`bg-[#5D878C]`) |
-| Invalid color syntax: `text-[#5D878C]-700` | Cannot combine arbitrary values with shade suffixes; replaced with actual hex value for that shade (`text-[#385154]`) |
-| Buttons invisible on light backgrounds | Changed from `bg-white` to visible brand colors (`bg-[#5D878C]` and `bg-[#BFB195]`) |
-| Portfolio card badge covering image center | Offset badge positioning from `bottom-0` to `bottom-6` with side margins |
-| Portfolio items had no images | Implemented conditional rendering with gradient fallback |
+| Sanity image-url TypeScript error blocking build | Switched from deprecated default import to `createImageUrlBuilder` named export |
+| CORS blocking Sanity Studio on production | Added all production domains to Sanity CORS with credentials enabled |
+| 7.4MB hero image causing deployment issues | Optimized to 475KB using sips (2560px width, 85% quality) |
+| Hero image showing 404 on Vercel despite successful builds | Switched from Next.js `<Image>` to standard `<img>` tag |
+| Vercel deploying old commit (64abdf2) without image | Triggered manual redeploy; verified latest commit includes image files |
+| Mobile cache not clearing for hero image | Vercel deployment completed after 2-3 minute build; auto-deploy working correctly |
+| Image file saved with double extension (`.jpg.jpg`) | Renamed file with `mv` command to correct extension |
 
 ---
 
 ## Current State
 
 ### What's Working
-✅ All brand colors properly applied across entire site
-✅ Buttons and CTAs clearly visible with proper contrast
-✅ Logo integrated in navigation with Montserrat typography
-✅ Portfolio cards display images as backgrounds with fallback
-✅ Design system fully documented
-✅ Dev server running at http://localhost:3001
+✅ Site deployed to production at https://thefirstcoastal.com
+✅ Vercel auto-deploy configured for `main` branch
+✅ Sanity CMS accessible at https://thefirstcoastal.com/studio
+✅ CORS properly configured for all production domains
+✅ Hero image live with Jacksonville Beach pier sunset photography
+✅ Image optimized for web (475KB, 2560px wide)
+✅ Responsive design working on mobile and desktop
+✅ All pages rendering correctly
+✅ Build pipeline stable (2-3 minute deployments)
+
+### Production URLs
+- **Live Site:** https://thefirstcoastal.com
+- **Vercel URL:** https://thefirstcoastal.vercel.app
+- **Sanity Studio:** https://thefirstcoastal.com/studio
+- **GitHub Repo:** https://github.com/Kellum/thefirstcoastal
 
 ### File Structure
 ```
 /Users/ryankellum/claude-proj/_thefirstcoastal/
-├── DESIGN_SYSTEM.md (NEW - comprehensive brand guidelines)
-├── media_assets/
-│   └── the_first_coastal_logo_highres.png
+├── current-audit-2025-12-29.md (NEW - comprehensive audit)
 ├── public/
-│   └── logo.png (NEW - copied from media_assets)
+│   ├── hero-jax-pier.jpg (NEW - optimized 475KB)
+│   ├── hero-jax-pier-original.jpg (NEW - backup 7.4MB)
+│   └── logo.png
 ├── app/
-│   ├── layout.tsx (MODIFIED - Montserrat font)
-│   ├── globals.css (MODIFIED - font-family)
-│   ├── page.tsx (MODIFIED - colors)
-│   ├── about/page.tsx (MODIFIED - colors)
-│   ├── work/page.tsx (MODIFIED - colors)
-│   ├── blog/[slug]/page.tsx (MODIFIED - colors)
-│   ├── work/[slug]/page.tsx (MODIFIED - colors)
-│   ├── contact/page.tsx (MODIFIED - colors)
-│   └── faq/page.tsx (MODIFIED - colors)
-├── components/
-│   ├── Navigation.tsx (MODIFIED - logo, Montserrat, colors)
-│   ├── Footer.tsx (MODIFIED - colors)
-│   ├── PortfolioCard.tsx (MODIFIED - image backgrounds, positioning)
-│   └── PortfolioGrid.tsx (MODIFIED - image URL passing)
-└── tailwind.config.ts (MODIFIED - brand colors added)
+│   ├── page.tsx (MODIFIED - hero image section)
+│   └── studio/[[...index]]/page.tsx
+├── lib/
+│   └── sanity.ts (MODIFIED - fixed image-url import)
+├── .env.local
+├── .vercel/ (NEW - Vercel config)
+└── .git/ (NEW - Git repository)
 ```
 
-### Tech Stack
-- Next.js 14.2.35 (App Router)
-- Tailwind CSS (arbitrary value syntax for colors)
-- Framer Motion (animations)
-- Sanity CMS (content)
-- Next.js Google Fonts (Montserrat)
+### Tech Stack (Production)
+- **Hosting:** Vercel (Washington D.C. datacenter - iad1)
+- **Framework:** Next.js 14.2.35
+- **CMS:** Sanity (Project ID: y0gns0g3)
+- **Deployment:** Git-based auto-deploy
+- **Build Time:** ~2-3 minutes
+- **SSL:** Automatic (Vercel)
 
 ---
 
 ## Next Steps
 
 ### Immediate Priorities
-1. **Test with Real Portfolio Data**
-   - Add portfolio items with images in Sanity CMS
-   - Verify image backgrounds render correctly
-   - Test fallback gradient for items without images
+1. **Fix Next.js Image Component** (Optional)
+   - Add proper image domain configuration to `next.config.js`
+   - Switch back to `<Image>` for automatic WebP optimization
+   - Test deployment to ensure 404 issues resolved
 
-2. **Accessibility Audit**
-   - Verify WCAG AA contrast ratios for all color combinations
-   - Test keyboard navigation
-   - Check screen reader compatibility
+2. **Implement Contact Form Backend**
+   - Integrate email service (Resend, SendGrid, or Formspree)
+   - Replace simulation with actual form submission
+   - Add server-side validation
 
-3. **Responsive Testing**
-   - Test logo and navigation on mobile devices
-   - Verify portfolio card layout on various screen sizes
-   - Check badge positioning on smaller viewports
+3. **SEO Optimization**
+   - Add meta tags to `app/layout.tsx`
+   - Configure Open Graph tags
+   - Generate sitemap.xml
+   - Add robots.txt
+
+4. **Analytics Setup**
+   - Install Vercel Analytics OR Google Analytics
+   - Track page views and user behavior
+   - Monitor performance metrics
+
+### Hero Image Refinement
+- **User Feedback Pending:** "Not sure I like it"
+- Options to explore:
+  - Adjust overlay darkness/opacity
+  - Modify text positioning or sizing
+  - Try alternative treatment (split layout, parallax, etc.)
+  - Test different photo from collection
 
 ### Future Enhancements
-- Consider adding fade-in animation for portfolio card images
-- Explore implementing lazy loading for portfolio images
-- Add more portfolio item detail page enhancements
-- Create reusable button components with design system colors
-- Implement blog content rendering with Portable Text
+- Set up Sanity webhooks for instant ISR revalidation
+- Add custom 404 page
+- Implement newsletter signup
+- Add blog RSS feed
+- Configure automated backups
+- Optimize remaining `<img>` tags in blog/portfolio pages
 
 ### Known Issues
-- Sanity image URL builder showing deprecation warning (use `createImageUrlBuilder` instead of default export)
-- Multiple dev servers running in background (consider cleanup)
+- ⚠️ Using standard `<img>` tag instead of Next.js `<Image>` (performance trade-off)
+- ⚠️ Three `<img>` tag warnings in build logs (blog and portfolio pages)
+- ⚠️ Multiple dev servers running in background (ports 3000, 3001, 3333)
+- ⚠️ Contact form is simulation only (not functional)
 
 ---
 
-## Files Modified
+## Git Commits (This Session)
 
-### Created
-- `DESIGN_SYSTEM.md`
-- `public/logo.png`
+```bash
+05489fd - Initial commit: The First Coastal marketing website
+64abdf2 - Fix Sanity image URL builder import for production build
+efb527c - Add stunning hero image to homepage
+f914803 - Optimize hero image for web performance
+a684e39 - Switch to standard img tag for hero image troubleshooting
+4499eb2 - Force Vercel redeploy with latest code
+```
 
-### Modified
-- `app/layout.tsx`
-- `app/globals.css`
-- `app/page.tsx`
-- `app/about/page.tsx`
-- `app/work/page.tsx`
-- `app/contact/page.tsx`
-- `app/faq/page.tsx`
-- `app/blog/[slug]/page.tsx`
-- `app/work/[slug]/page.tsx`
-- `components/Navigation.tsx`
-- `components/Footer.tsx`
-- `components/PortfolioCard.tsx`
-- `components/PortfolioGrid.tsx`
-- `tailwind.config.ts`
+---
+
+## Performance Metrics
+
+**Build Stats:**
+- Total build time: ~2 minutes
+- Pages generated: 10/10
+- First Load JS: 88.2kB (shared)
+- Largest page bundle: 1.6MB (Studio)
+- Static pages: 7
+- Dynamic pages: 3
+
+**Image Optimization:**
+- Original: 7.4MB → Optimized: 475KB
+- Reduction: 94%
+- Dimensions: 6720x4480 → 2560x1707
+- Quality: 85% (visually lossless)
 
 ---
 
 **Session Date:** December 29, 2024
-**Session Duration:** ~2 hours
-**Commits:** Pending
-**Status:** ✅ Ready for testing and review
+**Session Duration:** ~3 hours
+**Status:** ✅ **LIVE IN PRODUCTION**
+**Deployment:** Successful
+**Next Review:** After user feedback on hero image design
