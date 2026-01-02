@@ -108,7 +108,7 @@ export default async function PortfolioItemPage({
         {/* Service Sections */}
         <div className="space-y-20">
           {/* Web Design Section */}
-          {services.includes('web-design') && (
+          {(services.includes('web-design') || services.includes('website')) && (
             <section id="section-web-design" className="scroll-mt-32">
               <h2 className="text-3xl font-bold text-[#222326] mb-6 pb-4 border-b-2 border-[#5D878C]">
                 Web Design & Development
@@ -259,7 +259,7 @@ export default async function PortfolioItemPage({
           )}
 
           {/* Design Section */}
-          {services.includes('design') && validImages.length > 0 && (
+          {(services.includes('design') || services.includes('branding')) && validImages.length > 0 && (
             <section id="section-design" className="scroll-mt-32">
               <h2 className="text-3xl font-bold text-[#222326] mb-6 pb-4 border-b-2 border-[#5D878C]">
                 Design

@@ -32,20 +32,20 @@ const categories = ['All', 'Web Design', 'Social Media', 'SEO', 'Design'];
 export default function PortfolioGrid({ items }: PortfolioGridProps) {
   const [selectedCategory, setSelectedCategory] = useState('All');
 
-  // Map display names to service values
-  const categoryMap: Record<string, string> = {
-    'Web Design': 'web-design',
-    'Social Media': 'social-media',
-    'SEO': 'seo',
-    'Design': 'design'
+  // Map display names to service values (with backward compatibility)
+  const categoryMap: Record<string, string[]> = {
+    'Web Design': ['web-design', 'website'], // Support both old and new values
+    'Social Media': ['social-media'],
+    'SEO': ['seo'],
+    'Design': ['design', 'branding'] // Support both old and new values
   };
 
   const filteredItems = selectedCategory === 'All'
     ? items
     : items.filter(item => {
         const services = item.servicesProvided || (item.projectType ? [item.projectType] : []);
-        const categoryValue = categoryMap[selectedCategory];
-        return services.includes(categoryValue);
+        const categoryValues = categoryMap[selectedCategory];
+        return categoryValues.some(val => services.includes(val));
       });
 
   return (
