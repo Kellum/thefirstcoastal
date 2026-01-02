@@ -5,9 +5,13 @@ import { notFound } from 'next/navigation';
 import WebsiteViewToggle from '@/components/WebsiteViewToggle';
 import { getTagColor } from '@/lib/tagColors';
 
-export default async function PortfolioItemPage({ params }: { params: Promise<{ slug: string }> | { slug: string } }) {
-  const resolvedParams = await Promise.resolve(params);
-  const item = await getPortfolioItem(resolvedParams.slug);
+export default async function PortfolioItemPage({
+  params
+}: {
+  params: Promise<{ slug: string }>
+}) {
+  const { slug } = await params;
+  const item = await getPortfolioItem(slug);
 
   if (!item) {
     notFound();
@@ -42,23 +46,27 @@ export default async function PortfolioItemPage({ params }: { params: Promise<{ 
         </Link>
 
         {/* Client */}
-        <p className="text-sm uppercase tracking-wider text-[#5D878C] font-medium mb-4">
-          {item.client}
-        </p>
+        {item.client && (
+          <p className="text-sm uppercase tracking-wider text-[#5D878C] font-medium mb-4">
+            {item.client}
+          </p>
+        )}
 
         {/* Title */}
         <h1 className="text-5xl md:text-6xl font-bold text-[#222326] mb-6">
-          {item.title}
+          {item.title || 'Untitled Project'}
         </h1>
 
         {/* Meta */}
         <div className="flex items-center gap-4 text-gray-600 mb-8">
-          <time dateTime={item.completedDate}>
-            Completed {new Date(item.completedDate).toLocaleDateString('en-US', {
-              month: 'long',
-              year: 'numeric'
-            })}
-          </time>
+          {item.completedDate && (
+            <time dateTime={item.completedDate}>
+              Completed {new Date(item.completedDate).toLocaleDateString('en-US', {
+                month: 'long',
+                year: 'numeric'
+              })}
+            </time>
+          )}
           {item.projectUrl && (
             <>
               <span>•</span>
@@ -78,11 +86,13 @@ export default async function PortfolioItemPage({ params }: { params: Promise<{ 
         </div>
 
         {/* Description */}
-        <div className="prose prose-lg max-w-none mb-12">
-          <p className="text-xl text-gray-700 leading-relaxed">
-            {item.description}
-          </p>
-        </div>
+        {item.description && (
+          <div className="prose prose-lg max-w-none mb-12">
+            <p className="text-xl text-gray-700 leading-relaxed">
+              {item.description}
+            </p>
+          </div>
+        )}
 
         {/* Images - Different layouts based on project type */}
         {validImages.length > 0 && (
