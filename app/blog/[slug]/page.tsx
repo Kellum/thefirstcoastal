@@ -3,8 +3,9 @@ import { getBlogPost } from '@/lib/sanity';
 import { urlFor } from '@/lib/sanity';
 import { notFound } from 'next/navigation';
 
-export default async function BlogPost({ params }: { params: { slug: string } }) {
-  const post = await getBlogPost(params.slug);
+export default async function BlogPost({ params }: { params: Promise<{ slug: string }> | { slug: string } }) {
+  const resolvedParams = await Promise.resolve(params);
+  const post = await getBlogPost(resolvedParams.slug);
 
   if (!post) {
     notFound();

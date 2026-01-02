@@ -5,8 +5,9 @@ import { notFound } from 'next/navigation';
 import WebsiteViewToggle from '@/components/WebsiteViewToggle';
 import { getTagColor } from '@/lib/tagColors';
 
-export default async function PortfolioItemPage({ params }: { params: { slug: string } }) {
-  const item = await getPortfolioItem(params.slug);
+export default async function PortfolioItemPage({ params }: { params: Promise<{ slug: string }> | { slug: string } }) {
+  const resolvedParams = await Promise.resolve(params);
+  const item = await getPortfolioItem(resolvedParams.slug);
 
   if (!item) {
     notFound();
