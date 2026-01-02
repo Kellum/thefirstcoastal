@@ -3,33 +3,30 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 
+interface ImageUrl {
+  url1400: string;
+  url1600: string;
+  url1000: string;
+  url800: string;
+  url400: string;
+  url1200: string;
+  alt: string;
+}
+
 interface WebsiteViewToggleProps {
-  images: any[];
+  imageUrls: ImageUrl[];
   title: string;
   projectUrl?: string;
-  urlFor: (source: any) => any;
 }
 
 type ViewMode = 'desktop' | 'fullwidth' | 'responsive';
 
 export default function WebsiteViewToggle({
-  images,
+  imageUrls,
   title,
-  projectUrl,
-  urlFor
+  projectUrl
 }: WebsiteViewToggleProps) {
   const [viewMode, setViewMode] = useState<ViewMode>('desktop');
-
-  // Helper function to safely generate image URLs
-  const safeUrlFor = (image: any, width: number): string | null => {
-    try {
-      if (!image || !image.asset) return null;
-      return urlFor(image).width(width).url();
-    } catch (error) {
-      console.error('Error generating image URL:', error);
-      return null;
-    }
-  };
 
   return (
     <div className="space-y-6 mb-12">
@@ -80,7 +77,7 @@ export default function WebsiteViewToggle({
             exit={{ opacity: 0, y: -20 }}
             transition={{ duration: 0.3 }}
           >
-            {images.map((image: any, index: number) => (
+            {imageUrls.map((imageUrl, index) => (
               <div key={index} className="mb-12">
                 <div className="bg-white rounded-lg shadow-2xl overflow-hidden max-w-5xl mx-auto">
                   {/* Browser Chrome */}
@@ -98,18 +95,16 @@ export default function WebsiteViewToggle({
                   </div>
                   {/* Browser Content */}
                   <div className="overflow-hidden">
-                    {safeUrlFor(image, 1400) && (
-                      <img
-                        src={safeUrlFor(image, 1400)!}
-                        alt={image.alt || `${title} screenshot ${index + 1}`}
-                        className="w-full h-auto"
-                      />
-                    )}
+                    <img
+                      src={imageUrl.url1400}
+                      alt={imageUrl.alt}
+                      className="w-full h-auto"
+                    />
                   </div>
                 </div>
-                {index === 0 && images.length > 1 && (
+                {index === 0 && imageUrls.length > 1 && (
                   <p className="text-center text-sm text-gray-500 mt-4">
-                    Screenshot {index + 1} of {images.length}
+                    Screenshot {index + 1} of {imageUrls.length}
                   </p>
                 )}
               </div>
@@ -127,15 +122,13 @@ export default function WebsiteViewToggle({
             transition={{ duration: 0.3 }}
             className="space-y-12"
           >
-            {images.map((image: any, index: number) => (
+            {imageUrls.map((imageUrl, index) => (
               <div key={index} className="rounded-lg overflow-hidden shadow-xl">
-                {safeUrlFor(image, 1600) && (
-                  <img
-                    src={safeUrlFor(image, 1600)!}
-                    alt={image.alt || `${title} screenshot ${index + 1}`}
-                    className="w-full h-auto"
-                  />
-                )}
+                <img
+                  src={imageUrl.url1600}
+                  alt={imageUrl.alt}
+                  className="w-full h-auto"
+                />
               </div>
             ))}
           </motion.div>
@@ -155,9 +148,9 @@ export default function WebsiteViewToggle({
             <div className="flex-1 max-w-2xl">
               <div className="bg-gray-800 rounded-t-lg p-3 shadow-2xl">
                 <div className="bg-white rounded aspect-video overflow-hidden">
-                  {images[0] && safeUrlFor(images[0], 1000) && (
+                  {imageUrls[0] && (
                     <img
-                      src={safeUrlFor(images[0], 1000)!}
+                      src={imageUrls[0].url1000}
                       alt={`${title} desktop view`}
                       className="w-full h-full object-cover object-top"
                     />
@@ -173,9 +166,9 @@ export default function WebsiteViewToggle({
             <div className="w-48">
               <div className="bg-gray-800 rounded-[2rem] p-3 shadow-2xl">
                 <div className="bg-white rounded-[1.5rem] aspect-[9/19.5] overflow-hidden">
-                  {(images[1] || images[0]) && safeUrlFor(images[1] || images[0], 400) && (
+                  {(imageUrls[1] || imageUrls[0]) && (
                     <img
-                      src={safeUrlFor(images[1] || images[0], 400)!}
+                      src={(imageUrls[1] || imageUrls[0]).url400}
                       alt={`${title} mobile view`}
                       className="w-full h-full object-cover object-top"
                     />

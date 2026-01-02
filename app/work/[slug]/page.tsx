@@ -20,6 +20,17 @@ export default async function PortfolioItemPage({
   // Filter out any invalid images to prevent urlFor errors
   const validImages = item.images?.filter((img: any) => img && img.asset) || [];
 
+  // Pre-generate image URLs for client component (can't pass functions to client components)
+  const imageUrls = validImages.map((img: any) => ({
+    url1400: urlFor(img).width(1400).url(),
+    url1600: urlFor(img).width(1600).url(),
+    url1000: urlFor(img).width(1000).url(),
+    url800: urlFor(img).width(800).height(800).url(),
+    url400: urlFor(img).width(400).url(),
+    url1200: urlFor(img).width(1200).url(),
+    alt: img.alt || `${item.title} screenshot`
+  }));
+
   return (
     <div className="min-h-screen">
       {/* Header */}
@@ -100,10 +111,9 @@ export default async function PortfolioItemPage({
             {/* Website Project - Interactive View Toggle */}
             {item.projectType === 'website' && (
               <WebsiteViewToggle
-                images={validImages}
+                imageUrls={imageUrls}
                 title={item.title}
                 projectUrl={item.projectUrl}
-                urlFor={urlFor}
               />
             )}
 
