@@ -13,6 +13,9 @@ export default async function PortfolioItemPage({ params }: { params: Promise<{ 
     notFound();
   }
 
+  // Filter out any invalid images to prevent urlFor errors
+  const validImages = item.images?.filter((img: any) => img && img.asset) || [];
+
   return (
     <div className="min-h-screen">
       {/* Header */}
@@ -82,12 +85,12 @@ export default async function PortfolioItemPage({ params }: { params: Promise<{ 
         </div>
 
         {/* Images - Different layouts based on project type */}
-        {item.images && item.images.length > 0 && (
+        {validImages.length > 0 && (
           <>
             {/* Website Project - Interactive View Toggle */}
             {item.projectType === 'website' && (
               <WebsiteViewToggle
-                images={item.images}
+                images={validImages}
                 title={item.title}
                 projectUrl={item.projectUrl}
                 urlFor={urlFor}
@@ -98,7 +101,7 @@ export default async function PortfolioItemPage({ params }: { params: Promise<{ 
             {item.projectType === 'social-media' && (
               <div className="mb-12">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  {item.images.map((image: any, index: number) => (
+                  {validImages.map((image: any, index: number) => (
                     <div key={index} className="bg-white rounded-lg shadow-lg overflow-hidden">
                       {/* Social Post Header */}
                       <div className="p-4 border-b border-gray-200">
@@ -143,7 +146,7 @@ export default async function PortfolioItemPage({ params }: { params: Promise<{ 
             {/* Other/Default Project - Standard Grid */}
             {(!item.projectType || item.projectType === 'other') && (
               <div className="grid grid-cols-1 gap-8 mb-12">
-                {item.images.map((image: any, index: number) => (
+                {validImages.map((image: any, index: number) => (
                   <div key={index} className="rounded-lg overflow-hidden shadow-lg">
                     <img
                       src={urlFor(image).width(1200).url()}

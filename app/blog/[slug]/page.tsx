@@ -11,6 +11,9 @@ export default async function BlogPost({ params }: { params: Promise<{ slug: str
     notFound();
   }
 
+  // Safely check if featured image exists and has asset
+  const hasFeaturedImage = post.featuredImage && post.featuredImage.asset;
+
   return (
     <div className="min-h-screen">
       {/* Header */}
@@ -60,7 +63,7 @@ export default async function BlogPost({ params }: { params: Promise<{ slug: str
         </div>
 
         {/* Featured Image */}
-        {post.featuredImage && (
+        {hasFeaturedImage && (
           <div className="aspect-video overflow-hidden rounded-lg mb-12">
             <img
               src={urlFor(post.featuredImage).width(1200).height(675).url()}
