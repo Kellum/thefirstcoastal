@@ -11,7 +11,7 @@ export const client = createClient({
   projectId,
   dataset,
   apiVersion,
-  useCdn: true,
+  useCdn: false, // Disabled CDN for immediate updates from Sanity Studio
 });
 
 // Image URL builder
