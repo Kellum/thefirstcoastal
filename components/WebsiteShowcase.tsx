@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import Link from 'next/link';
 import { getTagColor } from '@/lib/tagColors';
 import BrowserMockup from './BrowserMockup';
-import iPhoneMockup from './iPhoneMockup';
+import IPhoneMockup from './iPhoneMockup';
 
 interface WebsiteShowcaseProps {
   title: string;
@@ -97,7 +97,7 @@ export default function WebsiteShowcase({
                 transition={{ duration: 0.2 }}
                 className="flex justify-center py-4"
               >
-                <iPhoneMockup
+                <IPhoneMockup
                   screenshot={finalMobileScreenshot}
                   title={title}
                 />
