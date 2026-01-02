@@ -22,13 +22,11 @@ export default function ProjectHeader({
       {/* Client Logo */}
       {clientLogo && (
         <div className="mb-8 flex justify-center">
-          <div className="max-w-xs w-auto max-h-32 bg-white rounded-lg shadow-md p-6 flex items-center justify-center">
-            <img
-              src={clientLogo}
-              alt={`${clientName} logo`}
-              className="max-w-full max-h-20 w-auto h-auto object-contain"
-            />
-          </div>
+          <img
+            src={clientLogo}
+            alt={`${clientName} logo`}
+            className="max-w-xs max-h-32 w-auto h-auto object-contain"
+          />
         </div>
       )}
 

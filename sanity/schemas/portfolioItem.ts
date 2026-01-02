@@ -113,6 +113,102 @@ export default defineType({
       },
     }),
     defineField({
+      name: 'websiteProjectType',
+      title: 'Website Project Type',
+      type: 'string',
+      options: {
+        list: [
+          { title: 'New Website Build', value: 'new-build' },
+          { title: 'Website Redesign/Update', value: 'redesign' },
+          { title: 'Website Maintenance & Improvements', value: 'maintenance' },
+        ],
+        layout: 'radio',
+      },
+      description: 'Was this a brand new website or work on an existing site?',
+      hidden: ({ document }) => {
+        const services = document?.servicesProvided as string[] | undefined;
+        return !services?.includes('web-design');
+      },
+    }),
+    defineField({
+      name: 'websiteTechnologies',
+      title: 'Technologies Used',
+      type: 'array',
+      of: [{ type: 'string' }],
+      options: {
+        layout: 'tags',
+      },
+      description: 'What technologies/platforms did you use to build this website? (e.g., Next.js, React, WordPress, Shopify)',
+      hidden: ({ document }) => {
+        const services = document?.servicesProvided as string[] | undefined;
+        const projectType = document?.websiteProjectType as string | undefined;
+        return !services?.includes('web-design') || projectType !== 'new-build';
+      },
+    }),
+    defineField({
+      name: 'websiteChallenges',
+      title: 'Challenges & Obstacles',
+      type: 'array',
+      of: [{ type: 'block' }],
+      description: 'What technical challenges or obstacles did this project need to overcome?',
+      hidden: ({ document }) => {
+        const services = document?.servicesProvided as string[] | undefined;
+        const projectType = document?.websiteProjectType as string | undefined;
+        return !services?.includes('web-design') || projectType !== 'new-build';
+      },
+    }),
+    defineField({
+      name: 'websiteSolutions',
+      title: 'Solutions Implemented',
+      type: 'array',
+      of: [{ type: 'block' }],
+      description: 'How did you solve those challenges? What approach did you take?',
+      hidden: ({ document }) => {
+        const services = document?.servicesProvided as string[] | undefined;
+        const projectType = document?.websiteProjectType as string | undefined;
+        return !services?.includes('web-design') || projectType !== 'new-build';
+      },
+    }),
+    defineField({
+      name: 'websiteExistingPlatform',
+      title: 'Existing Platform/Technologies',
+      type: 'array',
+      of: [{ type: 'string' }],
+      options: {
+        layout: 'tags',
+      },
+      description: 'What platform or technologies was the site originally built on? (e.g., WordPress, Wix, Squarespace, custom HTML)',
+      hidden: ({ document }) => {
+        const services = document?.servicesProvided as string[] | undefined;
+        const projectType = document?.websiteProjectType as string | undefined;
+        return !services?.includes('web-design') || projectType === 'new-build';
+      },
+    }),
+    defineField({
+      name: 'websiteIssues',
+      title: 'Issues with Previous Site',
+      type: 'array',
+      of: [{ type: 'block' }],
+      description: 'What problems existed with the previous site? What needed to be fixed?',
+      hidden: ({ document }) => {
+        const services = document?.servicesProvided as string[] | undefined;
+        const projectType = document?.websiteProjectType as string | undefined;
+        return !services?.includes('web-design') || projectType === 'new-build';
+      },
+    }),
+    defineField({
+      name: 'websiteImprovements',
+      title: 'Improvements Made',
+      type: 'array',
+      of: [{ type: 'block' }],
+      description: 'What did you do to fix or improve the site?',
+      hidden: ({ document }) => {
+        const services = document?.servicesProvided as string[] | undefined;
+        const projectType = document?.websiteProjectType as string | undefined;
+        return !services?.includes('web-design') || projectType === 'new-build';
+      },
+    }),
+    defineField({
       name: 'websiteFeatures',
       title: 'Key Website Features',
       type: 'array',

@@ -118,6 +118,105 @@ export default async function PortfolioItemPage({
                   <PortableTextRenderer value={item.websiteDescription} />
                 </div>
               )}
+
+              {/* Project Type & Technical Details */}
+              {item.websiteProjectType && (
+                <div className="mb-8 bg-gradient-to-br from-[#F0F4F5] to-white rounded-xl p-6">
+                  {/* Project Type Badge */}
+                  <div className="mb-6">
+                    <span className="inline-flex items-center px-4 py-2 rounded-full text-sm font-medium bg-[#5D878C] text-white">
+                      {item.websiteProjectType === 'new-build' && '🚀 New Website Build'}
+                      {item.websiteProjectType === 'redesign' && '✨ Website Redesign'}
+                      {item.websiteProjectType === 'maintenance' && '🔧 Website Maintenance'}
+                    </span>
+                  </div>
+
+                  {/* For New Builds */}
+                  {item.websiteProjectType === 'new-build' && (
+                    <div className="space-y-6">
+                      {/* Technologies */}
+                      {item.websiteTechnologies && item.websiteTechnologies.length > 0 && (
+                        <div>
+                          <h4 className="text-lg font-semibold text-[#222326] mb-3">Technologies Used</h4>
+                          <div className="flex flex-wrap gap-2">
+                            {item.websiteTechnologies.map((tech: string, index: number) => (
+                              <span
+                                key={index}
+                                className="px-3 py-1 bg-white rounded-full text-sm font-medium text-gray-700 border border-gray-200"
+                              >
+                                {tech}
+                              </span>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+
+                      {/* Challenges */}
+                      {item.websiteChallenges && (
+                        <div>
+                          <h4 className="text-lg font-semibold text-[#222326] mb-3">Challenges & Obstacles</h4>
+                          <div className="prose prose-sm max-w-none">
+                            <PortableTextRenderer value={item.websiteChallenges} />
+                          </div>
+                        </div>
+                      )}
+
+                      {/* Solutions */}
+                      {item.websiteSolutions && (
+                        <div>
+                          <h4 className="text-lg font-semibold text-[#222326] mb-3">Solutions Implemented</h4>
+                          <div className="prose prose-sm max-w-none">
+                            <PortableTextRenderer value={item.websiteSolutions} />
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  )}
+
+                  {/* For Redesigns/Maintenance */}
+                  {(item.websiteProjectType === 'redesign' || item.websiteProjectType === 'maintenance') && (
+                    <div className="space-y-6">
+                      {/* Existing Platform */}
+                      {item.websiteExistingPlatform && item.websiteExistingPlatform.length > 0 && (
+                        <div>
+                          <h4 className="text-lg font-semibold text-[#222326] mb-3">Original Platform</h4>
+                          <div className="flex flex-wrap gap-2">
+                            {item.websiteExistingPlatform.map((platform: string, index: number) => (
+                              <span
+                                key={index}
+                                className="px-3 py-1 bg-white rounded-full text-sm font-medium text-gray-700 border border-gray-200"
+                              >
+                                {platform}
+                              </span>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+
+                      {/* Issues */}
+                      {item.websiteIssues && (
+                        <div>
+                          <h4 className="text-lg font-semibold text-[#222326] mb-3">Issues with Previous Site</h4>
+                          <div className="prose prose-sm max-w-none">
+                            <PortableTextRenderer value={item.websiteIssues} />
+                          </div>
+                        </div>
+                      )}
+
+                      {/* Improvements */}
+                      {item.websiteImprovements && (
+                        <div>
+                          <h4 className="text-lg font-semibold text-[#222326] mb-3">Improvements Made</h4>
+                          <div className="prose prose-sm max-w-none">
+                            <PortableTextRenderer value={item.websiteImprovements} />
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  )}
+                </div>
+              )}
+
               <WebsiteViewToggle
                 imageUrls={imageUrls}
                 title={item.title}
