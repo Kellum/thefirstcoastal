@@ -14,19 +14,27 @@ interface ImageUrl {
 }
 
 interface WebsiteViewToggleProps {
-  imageUrls: ImageUrl[];
+  imageUrls?: ImageUrl[];
   title: string;
   projectUrl?: string;
+  desktopScreenshot?: string;
+  mobileScreenshot?: string;
 }
 
-type ViewMode = 'desktop' | 'fullwidth' | 'responsive';
+type ViewMode = 'desktop' | 'mobile';
 
 export default function WebsiteViewToggle({
   imageUrls,
   title,
-  projectUrl
+  projectUrl,
+  desktopScreenshot,
+  mobileScreenshot
 }: WebsiteViewToggleProps) {
   const [viewMode, setViewMode] = useState<ViewMode>('desktop');
+
+  // Use new screenshots if available, fallback to legacy images
+  const desktopImage = desktopScreenshot || imageUrls?.[0]?.url1400;
+  const mobileImage = mobileScreenshot || imageUrls?.[1]?.url400 || imageUrls?.[0]?.url400;
 
   return (
     <div className="space-y-6 mb-12">
@@ -35,33 +43,29 @@ export default function WebsiteViewToggle({
         <div className="inline-flex gap-2 bg-gray-100 rounded-lg p-1">
           <button
             onClick={() => setViewMode('desktop')}
-            className={`px-6 py-2 rounded-md text-sm font-medium transition-all ${
+            className={`flex items-center gap-2 px-6 py-2 rounded-md text-sm font-medium transition-all ${
               viewMode === 'desktop'
                 ? 'bg-white text-[#5D878C] shadow-sm'
                 : 'text-gray-600 hover:text-gray-900'
             }`}
           >
+            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+            </svg>
             Desktop
           </button>
           <button
-            onClick={() => setViewMode('fullwidth')}
-            className={`px-6 py-2 rounded-md text-sm font-medium transition-all ${
-              viewMode === 'fullwidth'
+            onClick={() => setViewMode('mobile')}
+            className={`flex items-center gap-2 px-6 py-2 rounded-md text-sm font-medium transition-all ${
+              viewMode === 'mobile'
                 ? 'bg-white text-[#5D878C] shadow-sm'
                 : 'text-gray-600 hover:text-gray-900'
             }`}
           >
-            Full View
-          </button>
-          <button
-            onClick={() => setViewMode('responsive')}
-            className={`px-6 py-2 rounded-md text-sm font-medium transition-all ${
-              viewMode === 'responsive'
-                ? 'bg-white text-[#5D878C] shadow-sm'
-                : 'text-gray-600 hover:text-gray-900'
-            }`}
-          >
-            Responsive
+            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z" />
+            </svg>
+            Mobile
           </button>
         </div>
       </div>
@@ -72,110 +76,100 @@ export default function WebsiteViewToggle({
         {viewMode === 'desktop' && (
           <motion.div
             key="desktop"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-            transition={{ duration: 0.3 }}
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.95 }}
+            transition={{ duration: 0.2 }}
+            className="max-w-5xl mx-auto"
           >
-            {imageUrls.map((imageUrl, index) => (
-              <div key={index} className="mb-12">
-                <div className="bg-white rounded-lg shadow-2xl overflow-hidden max-w-5xl mx-auto">
-                  {/* Browser Chrome */}
-                  <div className="flex items-center gap-2 px-4 py-3 bg-gray-100 border-b border-gray-200">
-                    <div className="flex gap-1.5">
-                      <div className="w-3 h-3 rounded-full bg-red-500"></div>
-                      <div className="w-3 h-3 rounded-full bg-yellow-500"></div>
-                      <div className="w-3 h-3 rounded-full bg-green-500"></div>
-                    </div>
-                    <div className="flex-1 ml-4">
-                      <div className="bg-white rounded px-4 py-1.5 text-sm text-gray-600 max-w-md border border-gray-200">
-                        {projectUrl || title.toLowerCase().replace(/\s+/g, '-') + '.com'}
-                      </div>
-                    </div>
-                  </div>
-                  {/* Browser Content */}
-                  <div className="overflow-hidden">
-                    <img
-                      src={imageUrl.url1400}
-                      alt={imageUrl.alt}
-                      className="w-full h-auto"
-                    />
+            <div className="bg-white rounded-lg shadow-2xl overflow-hidden">
+              {/* Browser Chrome */}
+              <div className="flex items-center gap-2 px-4 py-3 bg-gray-100 border-b border-gray-200">
+                {/* Window Controls */}
+                <div className="flex gap-1.5">
+                  <div className="w-3 h-3 rounded-full bg-[#FF5F56]"></div>
+                  <div className="w-3 h-3 rounded-full bg-[#FFBD2E]"></div>
+                  <div className="w-3 h-3 rounded-full bg-[#27C93F]"></div>
+                </div>
+                {/* URL Bar */}
+                <div className="flex-1 ml-4 flex items-center">
+                  <div className="bg-white rounded-md px-4 py-2 text-sm text-gray-500 max-w-md w-full border border-gray-200 flex items-center gap-2">
+                    <svg className="w-3.5 h-3.5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                    </svg>
+                    <span className="truncate font-mono text-xs">
+                      {projectUrl || title.toLowerCase().replace(/\s+/g, '-') + '.com'}
+                    </span>
                   </div>
                 </div>
-                {index === 0 && imageUrls.length > 1 && (
-                  <p className="text-center text-sm text-gray-500 mt-4">
-                    Screenshot {index + 1} of {imageUrls.length}
-                  </p>
+              </div>
+              {/* Browser Content */}
+              <div className="overflow-hidden bg-gray-50">
+                {desktopImage ? (
+                  <img
+                    src={desktopImage}
+                    alt={`${title} desktop view`}
+                    className="w-full h-auto"
+                  />
+                ) : (
+                  <div className="w-full aspect-video bg-gradient-to-br from-[#8DB1B6] to-[#4A6C70] flex items-center justify-center">
+                    <div className="text-white/50 text-sm font-medium">No screenshot available</div>
+                  </div>
                 )}
               </div>
-            ))}
-          </motion.div>
-        )}
-
-        {/* Full Width View */}
-        {viewMode === 'fullwidth' && (
-          <motion.div
-            key="fullwidth"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-            transition={{ duration: 0.3 }}
-            className="space-y-12"
-          >
-            {imageUrls.map((imageUrl, index) => (
-              <div key={index} className="rounded-lg overflow-hidden shadow-xl">
-                <img
-                  src={imageUrl.url1600}
-                  alt={imageUrl.alt}
-                  className="w-full h-auto"
-                />
-              </div>
-            ))}
-          </motion.div>
-        )}
-
-        {/* Responsive/Device View */}
-        {viewMode === 'responsive' && (
-          <motion.div
-            key="responsive"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-            transition={{ duration: 0.3 }}
-            className="flex flex-col md:flex-row items-start justify-center gap-8"
-          >
-            {/* Desktop Mockup */}
-            <div className="flex-1 max-w-2xl">
-              <div className="bg-gray-800 rounded-t-lg p-3 shadow-2xl">
-                <div className="bg-white rounded aspect-video overflow-hidden">
-                  {imageUrls[0] && (
-                    <img
-                      src={imageUrls[0].url1000}
-                      alt={`${title} desktop view`}
-                      className="w-full h-full object-cover object-top"
-                    />
-                  )}
-                </div>
-              </div>
-              <div className="h-3 bg-gray-700 rounded-b-lg"></div>
-              <div className="h-2 bg-gray-600 w-1/3 mx-auto rounded-b"></div>
-              <p className="text-center text-sm text-gray-500 mt-4">Desktop (1920x1080)</p>
             </div>
+          </motion.div>
+        )}
 
-            {/* Mobile Mockup */}
-            <div className="w-48">
-              <div className="bg-gray-800 rounded-[2rem] p-3 shadow-2xl">
-                <div className="bg-white rounded-[1.5rem] aspect-[9/19.5] overflow-hidden">
-                  {(imageUrls[1] || imageUrls[0]) && (
-                    <img
-                      src={(imageUrls[1] || imageUrls[0]).url400}
-                      alt={`${title} mobile view`}
-                      className="w-full h-full object-cover object-top"
-                    />
-                  )}
+        {/* Mobile iPhone Mockup View */}
+        {viewMode === 'mobile' && (
+          <motion.div
+            key="mobile"
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.95 }}
+            transition={{ duration: 0.2 }}
+            className="flex justify-center"
+          >
+            <div className="relative" style={{ width: '300px' }}>
+              {/* iPhone Frame */}
+              <div className="relative bg-[#1d1d1f] rounded-[3rem] p-3 shadow-2xl">
+                {/* Screen Container */}
+                <div className="relative bg-black rounded-[2.5rem] overflow-hidden" style={{ height: '600px' }}>
+                  {/* Dynamic Island */}
+                  <div className="absolute top-0 left-1/2 -translate-x-1/2 z-10 w-28 h-7 bg-black rounded-full flex items-center justify-center">
+                    <div className="w-16 h-4 bg-gradient-to-b from-gray-900 to-black rounded-full flex items-center justify-between px-2">
+                      <div className="w-1.5 h-1.5 rounded-full bg-blue-500/30"></div>
+                      <div className="w-1.5 h-1.5 rounded-full bg-gray-800"></div>
+                    </div>
+                  </div>
+
+                  {/* Screen Content - Fixed height with contain */}
+                  <div className="relative w-full h-full bg-white pt-7">
+                    {mobileImage ? (
+                      <img
+                        src={mobileImage}
+                        alt={`${title} mobile view`}
+                        className="w-full h-full object-contain object-top"
+                      />
+                    ) : (
+                      <div className="w-full h-full bg-gradient-to-br from-[#8DB1B6] to-[#4A6C70] flex items-center justify-center">
+                        <div className="text-white/50 text-xs font-medium px-4 text-center">
+                          No mobile screenshot available
+                        </div>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Home Indicator */}
+                  <div className="absolute bottom-2 left-1/2 -translate-x-1/2 w-32 h-1.5 bg-white/30 rounded-full"></div>
                 </div>
+
+                {/* Side Buttons */}
+                <div className="absolute -left-[3px] top-24 w-0.5 h-6 bg-[#2d2d2d] rounded-l"></div>
+                <div className="absolute -left-[3px] top-32 w-0.5 h-6 bg-[#2d2d2d] rounded-l"></div>
+                <div className="absolute -right-[3px] top-28 w-0.5 h-12 bg-[#2d2d2d] rounded-r"></div>
               </div>
-              <p className="text-center text-sm text-gray-500 mt-4">Mobile (375x812)</p>
             </div>
           </motion.div>
         )}

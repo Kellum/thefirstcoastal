@@ -35,10 +35,65 @@ export default defineType({
       validation: (Rule) => Rule.required(),
     }),
     defineField({
+      name: 'clientLogo',
+      title: 'Client Logo',
+      type: 'image',
+      description: 'Client or project logo (displayed at top of project page)',
+      options: {
+        hotspot: true,
+      },
+      fields: [
+        {
+          name: 'alt',
+          type: 'string',
+          title: 'Alternative Text',
+        },
+      ],
+    }),
+    defineField({
+      name: 'servicesProvided',
+      title: 'Services Provided',
+      type: 'array',
+      of: [{ type: 'string' }],
+      options: {
+        list: [
+          { title: 'Web Design', value: 'web-design' },
+          { title: 'Social Media', value: 'social-media' },
+          { title: 'SEO', value: 'seo' },
+          { title: 'Design', value: 'design' },
+        ],
+        layout: 'grid',
+      },
+      validation: (Rule) => Rule.required().min(1).error('Select at least one service'),
+      description: 'What services did you provide for this client? This determines which sections appear on the project page.',
+    }),
+    defineField({
+      name: 'displayType',
+      title: 'Primary Display Type',
+      type: 'string',
+      options: {
+        list: [
+          { title: 'Website Mockup (Browser/Phone)', value: 'web-mockup' },
+          { title: 'Social Media Card (Instagram-style)', value: 'social-card' },
+          { title: 'SEO Metrics Dashboard', value: 'seo-card' },
+          { title: 'Design Portfolio Card', value: 'design-card' },
+          { title: 'Generic Card (Simple)', value: 'generic' },
+        ],
+        layout: 'radio',
+      },
+      validation: (Rule) => Rule.required(),
+      description: 'How should this project appear on the work page grid? This controls the visual card style, not the services you provided.',
+      initialValue: 'web-mockup',
+    }),
+    defineField({
       name: 'projectUrl',
       title: 'Project URL',
       type: 'url',
       description: 'Link to the live project (optional)',
+      hidden: ({ document }) => {
+        const services = document?.servicesProvided as string[] | undefined;
+        return !services?.includes('web-design');
+      },
     }),
     defineField({
       name: 'completedDate',
@@ -47,9 +102,173 @@ export default defineType({
       validation: (Rule) => Rule.required(),
     }),
     defineField({
-      name: 'images',
-      title: 'Project Images',
+      name: 'websiteDescription',
+      title: 'Website Service Description',
       type: 'array',
+      of: [{ type: 'block' }],
+      description: 'Describe what you did for the website (supports formatting)',
+      hidden: ({ document }) => {
+        const services = document?.servicesProvided as string[] | undefined;
+        return !services?.includes('web-design');
+      },
+    }),
+    defineField({
+      name: 'websiteFeatures',
+      title: 'Key Website Features',
+      type: 'array',
+      of: [{ type: 'string' }],
+      description: 'List key features or highlights of the website (e.g., "Custom animations", "95+ Lighthouse score")',
+      hidden: ({ document }) => {
+        const services = document?.servicesProvided as string[] | undefined;
+        return !services?.includes('web-design');
+      },
+    }),
+    defineField({
+      name: 'desktopScreenshot',
+      title: 'Desktop Screenshot',
+      type: 'image',
+      description: 'Screenshot of the website in desktop/browser view',
+      options: {
+        hotspot: true,
+      },
+      fields: [
+        {
+          name: 'alt',
+          type: 'string',
+          title: 'Alternative Text',
+          description: 'Important for SEO and accessibility',
+        },
+      ],
+      hidden: ({ document }) => {
+        const services = document?.servicesProvided as string[] | undefined;
+        return !services?.includes('web-design');
+      },
+    }),
+    defineField({
+      name: 'mobileScreenshot',
+      title: 'Mobile Screenshot',
+      type: 'image',
+      description: 'Screenshot of the website in mobile view',
+      options: {
+        hotspot: true,
+      },
+      fields: [
+        {
+          name: 'alt',
+          type: 'string',
+          title: 'Alternative Text',
+          description: 'Important for SEO and accessibility',
+        },
+      ],
+      hidden: ({ document }) => {
+        const services = document?.servicesProvided as string[] | undefined;
+        return !services?.includes('web-design');
+      },
+    }),
+    defineField({
+      name: 'socialMediaDescription',
+      title: 'Social Media Service Description',
+      type: 'array',
+      of: [{ type: 'block' }],
+      description: 'Describe your social media work for this client (supports formatting)',
+      hidden: ({ document }) => {
+        const services = document?.servicesProvided as string[] | undefined;
+        return !services?.includes('social-media');
+      },
+    }),
+    defineField({
+      name: 'socialMediaPosts',
+      title: 'Social Media Posts',
+      type: 'array',
+      description: 'Upload images of social media posts created for this client',
+      of: [
+        {
+          type: 'image',
+          options: {
+            hotspot: true,
+          },
+          fields: [
+            {
+              name: 'alt',
+              type: 'string',
+              title: 'Alternative Text',
+              description: 'Describe the social media post',
+            },
+            {
+              name: 'platform',
+              type: 'string',
+              title: 'Platform',
+              description: 'Which platform is this post for?',
+              options: {
+                list: ['Instagram', 'Facebook', 'Twitter/X', 'LinkedIn', 'TikTok', 'Other']
+              }
+            },
+          ],
+        },
+      ],
+      hidden: ({ document }) => {
+        const services = document?.servicesProvided as string[] | undefined;
+        return !services?.includes('social-media');
+      },
+    }),
+    defineField({
+      name: 'seoDescription',
+      title: 'SEO Service Description',
+      type: 'array',
+      of: [{ type: 'block' }],
+      description: 'Describe your SEO work and strategy for this client (supports formatting)',
+      hidden: ({ document }) => {
+        const services = document?.servicesProvided as string[] | undefined;
+        return !services?.includes('seo');
+      },
+    }),
+    defineField({
+      name: 'seoMetrics',
+      title: 'SEO Results & Metrics',
+      type: 'object',
+      description: 'SEO performance metrics and results',
+      fields: [
+        {
+          name: 'beforeScreenshot',
+          type: 'image',
+          title: 'Before Screenshot',
+          description: 'Analytics/rankings before SEO work',
+        },
+        {
+          name: 'afterScreenshot',
+          type: 'image',
+          title: 'After Screenshot',
+          description: 'Analytics/rankings after SEO work',
+        },
+        {
+          name: 'improvements',
+          type: 'array',
+          title: 'Key Improvements',
+          of: [{ type: 'string' }],
+          description: 'List key SEO improvements (e.g., "50% increase in organic traffic")',
+        },
+      ],
+      hidden: ({ document }) => {
+        const services = document?.servicesProvided as string[] | undefined;
+        return !services?.includes('seo');
+      },
+    }),
+    defineField({
+      name: 'brandingDescription',
+      title: 'Design Service Description',
+      type: 'array',
+      of: [{ type: 'block' }],
+      description: 'Describe your branding/design work for this client (supports formatting)',
+      hidden: ({ document }) => {
+        const services = document?.servicesProvided as string[] | undefined;
+        return !services?.includes('design');
+      },
+    }),
+    defineField({
+      name: 'images',
+      title: 'Additional Images',
+      type: 'array',
+      description: 'Other project images, screenshots, or visual assets',
       of: [
         {
           type: 'image',
@@ -78,18 +297,20 @@ export default defineType({
     }),
     defineField({
       name: 'projectType',
-      title: 'Project Type',
+      title: 'Project Type (Legacy)',
       type: 'string',
       options: {
         list: [
-          { title: 'Website/Web App', value: 'website' },
+          { title: 'Web Design', value: 'web-design' },
           { title: 'Social Media', value: 'social-media' },
-          { title: 'Other', value: 'other' },
+          { title: 'SEO', value: 'seo' },
+          { title: 'Design', value: 'design' },
         ],
         layout: 'radio',
       },
-      initialValue: 'other',
-      validation: (Rule) => Rule.required(),
+      initialValue: 'web-design',
+      hidden: true,
+      description: 'Legacy field - use Services Provided instead',
     }),
     defineField({
       name: 'featured',

@@ -1,116 +1,107 @@
 # Development Checkpoint - January 2, 2026
 
-## Session: Railway Migration & Server Component Bug Fix
+## Session: Service Categories & Display Type System
 
-**Tags:** `#deployment` `#railway` `#bug` `#next.js` `#server-components` `#debugging` `#production`
+**Tags:** `#cms` `#sanity` `#ui` `#refactor` `#portfolio` `#showcase-components`
 
 ---
 
 ## Session Goals
 
-1. Debug server-side exception error on portfolio detail pages
-2. Fix Next.js Server/Client Component boundary violations
-3. Ensure Railway deployment is stable
-4. Maintain proper Next.js 14+ conventions
+1. Update service categories across entire application (Web Design, Social Media, SEO, Design)
+2. Implement Primary Display Type field in Sanity for explicit card style control
+3. Create dedicated showcase components for SEO and Design projects
+4. Ensure consistent naming and functionality across all systems
 
 ---
 
 ## Work Completed
 
-### 1. Investigated Server-Side Exception Error
+### 1. Updated Service Categories System-Wide
 
-**Initial Symptoms:**
-- Portfolio detail pages (`/work/[slug]`) throwing server-side exception
-- Error: "Application error: a server-side exception has occurred"
-- Error occurring both locally and on Railway production
-- Work listing page (`/work`) loading fine
+**Changes Made:**
+- Updated from: `Website/Web App`, `Social Media Marketing`, `SEO`, `Branding/Design`, `Other`
+- Updated to: `Web Design`, `Social Media`, `SEO`, `Design`
+- Removed the "Other" category entirely
 
-**Debugging Process:**
-1. Initially suspected params handling issue (Next.js 14+ changed params to Promise)
-2. Added comprehensive error handling for image processing
-3. Fixed slug extraction inconsistencies in blog queries
-4. Added defensive null checks for missing data fields
+**Files Updated:**
+- `sanity/schemas/portfolioItem.ts` - Updated servicesProvided options and all conditional field visibility
+- `components/ServiceTabs.tsx` - Updated service labels and icons mapping
+- `app/work/[slug]/page.tsx` - Updated section IDs and headings
+- `components/PortfolioGrid.tsx` - Updated filter categories and category mapping
 
-**Root Cause Discovered:**
-- Error logs revealed: `"Functions cannot be passed directly to Client Components unless you explicitly expose it by marking it with 'use server'"`
-- The `urlFor` function was being passed from Server Component to Client Component (WebsiteViewToggle)
-- This violates Next.js Server/Client component boundary rules
-
-### 2. Fixed Server/Client Component Boundary Violation
-
-**The Problem:**
+**Service Value Mappings:**
 ```typescript
-// app/work/[slug]/page.tsx (Server Component)
-<WebsiteViewToggle
-  images={item.images}
-  urlFor={urlFor}  // ❌ Cannot pass functions to Client Components!
-/>
+'Web Design' → 'web-design'
+'Social Media' → 'social-media'
+'SEO' → 'seo'
+'Design' → 'design'
 ```
 
-**The Solution:**
-Pre-generate all image URL variations in the Server Component:
-```typescript
-// Generate URLs in Server Component
-const imageUrls = validImages.map((img: any) => ({
-  url1400: urlFor(img).width(1400).url(),
-  url1600: urlFor(img).width(1600).url(),
-  url1000: urlFor(img).width(1000).url(),
-  url800: urlFor(img).width(800).height(800).url(),
-  url400: urlFor(img).width(400).url(),
-  url1200: urlFor(img).width(1200).url(),
-  alt: img.alt || `${item.title} screenshot`
-}));
+### 2. Implemented Primary Display Type Field
 
-// Pass pre-generated URLs instead of function
-<WebsiteViewToggle
-  imageUrls={imageUrls}  // ✅ Data only, no functions
-  title={item.title}
-  projectUrl={item.projectUrl}
-/>
-```
+**Problem Identified:**
+- Card display type was determined by **first service** in array
+- No explicit control over which card style appeared on work grid
+- Projects with multiple services could only show one style
 
-**Updated Components:**
-- Modified `WebsiteViewToggle` interface to accept `ImageUrl[]` instead of `images` + `urlFor`
-- Removed `safeUrlFor` helper function (no longer needed)
-- Updated all three view modes (Desktop, Full Width, Responsive) to use pre-generated URLs
+**Solution:**
+Added `displayType` field to Sanity schema with 5 options:
+1. `web-mockup` - Website Mockup (Browser/Phone)
+2. `social-card` - Social Media Card (Instagram-style)
+3. `seo-card` - SEO Metrics Dashboard ✨ NEW
+4. `design-card` - Design Portfolio Card ✨ NEW
+5. `generic` - Generic Card (Simple fallback)
 
-### 3. Additional Fixes & Improvements
+**Implementation:**
+- Added field to `sanity/schemas/portfolioItem.ts` after `servicesProvided`
+- Updated Sanity queries in `lib/sanity.ts` to fetch `displayType`
+- Updated TypeScript interface in `components/PortfolioGrid.tsx`
+- Modified rendering logic to prioritize `displayType` over legacy service-based logic
+- Maintained backward compatibility for existing projects
 
-**Params Handling (Next.js 14.2+):**
-```typescript
-// Before
-export default async function PortfolioItemPage({
-  params
-}: {
-  params: Promise<{ slug: string }> | { slug: string }
-}) {
-  const resolvedParams = await Promise.resolve(params);
-  const item = await getPortfolioItem(resolvedParams.slug);
-}
+### 3. Created New Showcase Components
 
-// After (cleaner)
-export default async function PortfolioItemPage({
-  params
-}: {
-  params: Promise<{ slug: string }>
-}) {
-  const { slug } = await params;
-  const item = await getPortfolioItem(slug);
-}
-```
+**SEOShowcase Component** (`components/SEOShowcase.tsx`):
+- Analytics-focused card design
+- **Performance Metrics Grid:**
+  - Lighthouse Performance Score (95/100) with progress bar
+  - Traffic Increase (+65%) with progress bar
+  - Search Rank Increase (+24 positions)
+  - Page Speed (1.2 sec load time)
+- **Traffic Growth Chart** - Simple bar chart visualization
+- **Color-coded Metrics:**
+  - Green for performance
+  - Blue for traffic
+  - Purple for rankings
+  - Orange for speed
+- **SEO Badge** - "Optimized" status indicator
 
-**Image Validation:**
-- Filter out invalid images missing `asset` field
-- Add try-catch for image URL generation in PortfolioGrid
-- Handle missing featured images in blog posts
+**DesignShowcase Component** (`components/DesignShowcase.tsx`):
+- Creative portfolio card design
+- **Client Avatar** with gradient background and initial
+- **Design Tools Badges** - Photoshop (Ps) and Illustrator (Ai) icons
+- **Main Showcase Area** - Shows project image or creative gradient pattern
+- **Design Details Grid:**
+  - Color palette swatches (3 colors)
+  - Typography sample with custom font indicator
+  - Design style indicator (Modern)
+- **Decorative Elements** - Gradient overlays and floating shapes when no image
 
-**Defensive Null Checks:**
-- Added checks for `item.client`, `item.completedDate`, `item.description`
-- Prevent rendering undefined fields that could cause crashes
+### 4. Updated Filtering & Rendering Logic
 
-**Blog Slug Consistency:**
-- Fixed `getBlogPosts()` to extract `slug.current` as `"slug"`
-- Updated blog listing page to use `post.slug` instead of `post.slug.current`
+**PortfolioGrid Updates:**
+- Imported new `SEOShowcase` and `DesignShowcase` components
+- Updated `categoryMap` for filter buttons to match new service values
+- Enhanced rendering logic with new card types:
+  ```typescript
+  if (displayType === 'web-mockup') → WebsiteShowcase
+  else if (displayType === 'social-card') → SocialMediaShowcase
+  else if (displayType === 'seo-card') → SEOShowcase  // NEW
+  else if (displayType === 'design-card') → DesignShowcase  // NEW
+  else → PortfolioCard (generic fallback)
+  ```
+- Maintained backward compatibility with legacy `projectType` field
 
 ---
 
@@ -118,11 +109,13 @@ export default async function PortfolioItemPage({
 
 | Decision | Reasoning |
 |----------|-----------|
-| Pre-generate image URLs in Server Component | Next.js prohibits passing functions across Server/Client boundary; URLs are serializable data |
-| Create ImageUrl interface with all size variants | Each view mode needs different sizes; pre-generating all variants prevents runtime errors |
-| Always treat params as Promise in Next.js 14.2+ | Next.js 14.2+ made params always a Promise in production; cleaner to handle consistently |
-| Filter images before processing | Prevents crashes from malformed Sanity image data missing asset field |
-| Add defensive null checks for optional fields | Railway fresh builds are stricter; prevents rendering undefined values |
+| Change "Social Media Marketing" to "Social Media Management" | "Marketing" is scary term for clients who just want posting/management services; more approachable language |
+| Remove "Other" category | Simplified to 4 clear service categories that cover all offerings |
+| Add explicit displayType field vs automatic detection | Gives full control over card appearance; projects with multiple services need explicit choice |
+| Create dedicated SEO and Design card designs | Each service type has unique visual language; SEO shows metrics/data, Design shows creativity/aesthetics |
+| Use radio buttons for displayType | Only one display style can be active at a time on work grid; clear single choice |
+| Set 'web-mockup' as default displayType | Most common project type; reasonable default for new entries |
+| Pre-generate metrics in SEO card component | Placeholder data shows card design; will be replaced with real data from Sanity fields later |
 
 ---
 
@@ -130,138 +123,146 @@ export default async function PortfolioItemPage({
 
 | Challenge | Solution |
 |-----------|----------|
-| Server-side exception with no detailed error message | Checked local dev server stderr logs which revealed the actual error: function passing violation |
-| "It was working yesterday, now broken with no code changes" mystery | Code had latent bug since portfolio redesign 3 days ago; Next.js dev cache hid it; Railway fresh build exposed it |
-| Function passing to Client Component | Pre-generate all image URL variations in Server Component before passing to client |
-| Params type confusion in Next.js 14+ | Simplified to always treat params as Promise, use direct destructuring after await |
-| Invalid images crashing page | Filter images for required asset field, add try-catch around urlFor calls |
-| Blog slug inconsistency | Standardize on extracting slug.current as "slug" in GROQ query |
+| Old filter buttons showing (Development, E-commerce, Marketing) | Found and updated categories array in PortfolioGrid component |
+| Filter logic using tags instead of servicesProvided | Rewrote filtering to use servicesProvided field with categoryMap for display names |
+| No control over which card style displays | Added displayType field to Sanity with 5 explicit options |
+| SEO and Design projects using generic cards | Created two new specialized showcase components with unique designs |
+| Backward compatibility with existing projects | Added fallback logic to determine displayType from first service if not set |
+| Service name inconsistencies across app | Systematically updated all references in Sanity schema, components, and page files |
 
 ---
 
 ## Current State
 
 ### What's Working
-✅ Portfolio detail pages loading without errors
-✅ Server/Client component boundary properly respected
-✅ Railway deployment succeeding
-✅ All image sizes pre-generated for optimal rendering
-✅ Params handling follows Next.js 14.2+ conventions
-✅ Defensive error handling prevents crashes on malformed data
-✅ Both local and production environments working consistently
+✅ Service categories unified across entire application (Web Design, Social Media, SEO, Design)
+✅ Filter buttons on work page show correct 4 categories
+✅ Filtering works by servicesProvided instead of tags
+✅ Primary Display Type field available in Sanity Studio
+✅ 5 distinct card designs: Web Mockup, Social Card, SEO Card, Design Card, Generic
+✅ SEOShowcase component with metrics dashboard design
+✅ DesignShowcase component with creative portfolio design
+✅ Backward compatibility maintained for legacy projects
+✅ All showcase components follow same pattern (motion, tags, hover states)
 
-### Production URLs
-- **Live Site:** https://thefirstcoastal.com (Railway)
-- **GitHub Repo:** https://github.com/Kellum/thefirstcoastal
-- **Sanity Studio:** https://thefirstcoastal.com/studio
+### Visual Card Designs
 
-### Technical Architecture
-- **Hosting:** Railway (migrated from Vercel)
-- **Framework:** Next.js 14.2.21
-- **React:** 18.3.1
-- **CMS:** Sanity (Project ID: y0gns0g3)
-- **Deployment:** Git-based auto-deploy from main branch
+**Web Mockup Card:**
+- Browser chrome with window controls
+- Desktop/Mobile toggle button
+- Device mockups (browser frame or iPhone)
+
+**Social Media Card:**
+- Instagram-style post layout
+- Profile avatar with client initial
+- Square image with social actions (heart, comment)
+
+**SEO Metrics Card:** ✨ NEW
+- Dashboard-style layout
+- 4 metric cards with progress bars
+- Traffic growth chart visualization
+- "Optimized" badge indicator
+
+**Design Portfolio Card:** ✨ NEW
+- Creative layout with gradient backgrounds
+- Design tool badges (Ps, Ai)
+- Color palette swatches
+- Typography and style indicators
+
+**Generic Card:**
+- Simple image and text layout
+- Fallback for uncategorized projects
 
 ### Files Modified (This Session)
 
-**Core Fixes:**
-- `app/work/[slug]/page.tsx` - Pre-generate image URLs, fix params handling
-- `app/blog/[slug]/page.tsx` - Fix params handling, add image validation
-- `components/WebsiteViewToggle.tsx` - Accept imageUrls instead of urlFor function
-- `lib/sanity.ts` - Fix getBlogPosts slug extraction
+**Sanity Schema:**
+- `sanity/schemas/portfolioItem.ts` - Updated service categories, added displayType field
 
-**Error Handling:**
-- `app/work/page.tsx` - Add try-catch for portfolio fetch
-- `app/blog/page.tsx` - Add try-catch for blog fetch, fix slug access
-- `components/PortfolioGrid.tsx` - Add try-catch for image URL generation
+**Sanity Queries:**
+- `lib/sanity.ts` - Added displayType to portfolio item queries
+
+**Components:**
+- `components/ServiceTabs.tsx` - Updated service labels and icons
+- `components/PortfolioGrid.tsx` - Updated filters, rendering logic, imports
+- `components/SEOShowcase.tsx` - Created new SEO card component ✨
+- `components/DesignShowcase.tsx` - Created new Design card component ✨
+
+**Pages:**
+- `app/work/[slug]/page.tsx` - Updated section IDs and headings
 
 ---
 
 ## Next Steps
 
-### Immediate Priorities
-1. **Monitor Railway Deployment**
-   - Verify all portfolio pages load correctly
-   - Check that image toggles work in all view modes
-   - Test with multiple portfolio items
+### Immediate Actions
+1. **Test All Card Types**
+   - Create sample projects in Sanity with each displayType
+   - Verify all 5 card styles render correctly
+   - Test filtering with new service categories
 
-2. **Clean Up Background Dev Servers**
-   - Multiple dev servers still running (ports 3000, 3001)
-   - Kill old processes to free up resources
+2. **Populate Real SEO Metrics**
+   - Add Sanity fields for actual SEO data (optional)
+   - Update SEOShowcase to display real metrics when available
+   - Keep placeholder metrics for projects without data
 
-3. **Domain Configuration**
-   - User has ANAME records set up with Porkbun
-   - Verify custom domain routing to Railway
+3. **Enhance Design Card**
+   - Consider adding actual color palette from Sanity
+   - Allow custom design tool badges
+   - Make style/type fields editable
 
 ### Content & CMS
-4. **Add More Portfolio Items**
-   - Current site only has one portfolio entry
-   - Test different project types (website, social-media, other)
-   - Verify all rendering paths work correctly
+4. **Update Existing Portfolio Items**
+   - Edit existing projects to set displayType
+   - Assign appropriate service categories
+   - Test backward compatibility
 
-5. **Populate Blog Content**
-   - Add sample blog posts to test blog detail pages
-   - Verify Portable Text rendering when implemented
+5. **Create Sample Projects**
+   - Add SEO project example with metrics
+   - Add Design project example with portfolio work
+   - Verify each card type in production
 
 ### Future Enhancements
-- Implement Portable Text renderer for full blog content
-- Add SEO meta tags and Open Graph data
-- Set up analytics tracking
-- Optimize remaining images with Next.js Image component
-- Add automated tests for Server/Client component boundaries
+- Add dynamic metrics to SEO card from Sanity fields
+- Allow custom color palettes in Design card
+- Add animation/transition between card types
+- Consider hover states that preview project details
+- Add ability to feature specific metrics on SEO cards
+- Create admin preview of how card will appear
 
-### Known Issues
-- ⚠️ Multiple background dev servers running (non-critical)
-- ⚠️ Contact form still simulation-only (not functional)
-- ⚠️ Blog content uses excerpt only (Portable Text renderer needed)
-
----
-
-## Git Commits (This Session)
-
-```bash
-bf9e483 - Fix: Pre-generate image URLs instead of passing function to client component
-d674784 - Fix params handling and add defensive null checks
-c6c5bfb - Fix image handling with comprehensive error checking
-d5ad0a0 - Add comprehensive error handling and fix slug extraction
-a2b0137 - Fix dynamic route params handling for Next.js 14+
-f74c6b5 - Optimize build to reduce legacy JavaScript output
-8bc8692 - Fix Sanity Studio config with fallback projectId
-ceebf2a - Add fallback values for Sanity client during build
-763f252 - Fix Sanity client initialization for Railway deployment
-2755c16 - Fix Railway configuration - simplify toml file
-ddb550b - Redesign portfolio display and add Railway deployment config
-```
+### Design System
+- Document all 5 card types in DESIGN_SYSTEM.md
+- Create visual guide for when to use each card type
+- Standardize spacing/sizing across all card components
+- Consider accessibility improvements (ARIA labels, keyboard nav)
 
 ---
 
 ## Lessons Learned
 
-### Next.js Server/Client Component Boundaries
-- **Never pass functions** from Server to Client Components
-- Pre-compute all data that requires server-side functions (like urlFor)
-- Pass only serializable data (strings, numbers, arrays, objects)
-- Error messages in production are hidden; check dev server logs
+### Service Category Naming
+- **User-friendly language matters** - "Social Media Management" is less intimidating than "Marketing"
+- **Clear categories reduce friction** - 4 specific categories better than vague "Other" option
+- **Consistency is key** - Service names must match across Sanity, filters, sections, and tabs
 
-### Next.js 14+ Params Handling
-- In Next.js 14.2+, `params` is **always a Promise** in production
-- Even if it works in dev, production builds enforce Promise handling
-- Use `const { slug } = await params` for clean, consistent code
+### CMS Field Design
+- **Explicit > Implicit** - Better to have dedicated "displayType" field than auto-detect from services
+- **Radio buttons for single choice** - Clear UI pattern for mutually exclusive options
+- **Descriptive labels help content editors** - "Website Mockup (Browser/Phone)" clarifies what card will look like
 
-### Caching Can Hide Bugs
-- Next.js `.next` cache can hide Server/Client boundary violations
-- Fresh builds (like Railway deploys) expose latent issues
-- If "it was working before with no changes," suspect build cache
+### Component Architecture
+- **Specialized components for different content types** - SEO metrics need different layout than creative design work
+- **Consistent patterns across variations** - All showcase components share same structure (motion, tags, title/description)
+- **Placeholder data in components** - Hardcoded metrics let you see design before adding CMS fields
 
-### Railway vs Vercel Differences
-- Railway does fresh builds every deploy (no cache)
-- More strict about Next.js conventions
-- Requires proper environment variable fallbacks during build phase
+### Backward Compatibility
+- **Always provide fallback logic** - Existing projects should work without manual updates
+- **Legacy field support** - Keep old projectType field for transition period
+- **Default values prevent errors** - initialValue ensures new projects have displayType set
 
 ---
 
 **Session Date:** January 2, 2026
-**Session Duration:** ~1.5 hours
-**Status:** ✅ **FIXED & DEPLOYED**
-**Deployment:** Railway - Successful
-**Next Review:** Monitor for any additional edge cases with portfolio/blog pages
+**Session Duration:** ~2 hours
+**Status:** ✅ **COMPLETE**
+**Components Created:** 2 new showcase components (SEO, Design)
+**Next Review:** Test all card types with real content in Sanity

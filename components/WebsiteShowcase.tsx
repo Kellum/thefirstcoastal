@@ -1,8 +1,11 @@
 'use client';
 
-import { motion } from 'framer-motion';
+import { useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import Link from 'next/link';
 import { getTagColor } from '@/lib/tagColors';
+import BrowserMockup from './BrowserMockup';
+import iPhoneMockup from './iPhoneMockup';
 
 interface WebsiteShowcaseProps {
   title: string;
@@ -12,6 +15,8 @@ interface WebsiteShowcaseProps {
   images?: any[];
   tags: string[];
   slug: string;
+  desktopScreenshot?: string;
+  mobileScreenshot?: string;
 }
 
 export default function WebsiteShowcase({
@@ -20,45 +25,85 @@ export default function WebsiteShowcase({
   description,
   image,
   tags,
-  slug
+  slug,
+  desktopScreenshot,
+  mobileScreenshot
 }: WebsiteShowcaseProps) {
+  const [viewMode, setViewMode] = useState<'desktop' | 'mobile'>('desktop');
+
+  // Use new screenshots if available, fallback to legacy image
+  const finalDesktopScreenshot = desktopScreenshot || image;
+  const finalMobileScreenshot = mobileScreenshot || image;
+
+  const toggleViewMode = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setViewMode(prev => prev === 'desktop' ? 'mobile' : 'desktop');
+  };
+
   return (
     <div>
+      {/* Toggle Button */}
+      <div className="flex justify-end mb-2 px-1">
+        <button
+          onClick={toggleViewMode}
+          className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-gray-100 hover:bg-gray-200 text-gray-700 transition-colors text-xs font-medium group"
+          aria-label={`Switch to ${viewMode === 'desktop' ? 'mobile' : 'desktop'} view`}
+        >
+          <motion.div
+            animate={{ rotate: viewMode === 'mobile' ? 180 : 0 }}
+            transition={{ duration: 0.3 }}
+          >
+            {viewMode === 'desktop' ? (
+              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+              </svg>
+            ) : (
+              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z" />
+              </svg>
+            )}
+          </motion.div>
+          <span className="hidden sm:inline">{viewMode === 'desktop' ? 'Desktop' : 'Mobile'}</span>
+        </button>
+      </div>
+
       <Link href={`/work/${slug}`} className="block group">
         <motion.div
           className="relative cursor-pointer overflow-hidden rounded-lg bg-gradient-to-br from-[#F0F4F5] to-[#E5ECEE] p-6"
           whileHover={{ y: -8 }}
           transition={{ duration: 0.3 }}
         >
-          {/* Browser Mockup - Static */}
-          <div className="bg-white rounded-lg shadow-xl overflow-hidden">
-            {/* Browser Chrome */}
-            <div className="flex items-center gap-2 px-4 py-2.5 bg-gray-100 border-b border-gray-200">
-              <div className="flex gap-1.5">
-                <div className="w-2.5 h-2.5 rounded-full bg-red-400"></div>
-                <div className="w-2.5 h-2.5 rounded-full bg-yellow-400"></div>
-                <div className="w-2.5 h-2.5 rounded-full bg-green-400"></div>
-              </div>
-              <div className="flex-1 ml-3">
-                <div className="bg-white rounded px-3 py-0.5 text-[10px] text-gray-400 max-w-[120px] truncate border border-gray-200">
-                  {title.toLowerCase().replace(/\s+/g, '-')}
-                </div>
-              </div>
-            </div>
-
-            {/* Browser Content */}
-            <div className="aspect-video overflow-hidden bg-gray-50">
-              {image ? (
-                <img
-                  src={image}
-                  alt={title}
-                  className="w-full h-full object-cover object-top transition-transform duration-500 group-hover:scale-105"
+          <AnimatePresence mode="wait">
+            {viewMode === 'desktop' ? (
+              <motion.div
+                key="desktop"
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.95 }}
+                transition={{ duration: 0.2 }}
+              >
+                <BrowserMockup
+                  screenshot={finalDesktopScreenshot}
+                  title={title}
                 />
-              ) : (
-                <div className="w-full h-full bg-gradient-to-br from-[#8DB1B6] to-[#4A6C70]" />
-              )}
-            </div>
-          </div>
+              </motion.div>
+            ) : (
+              <motion.div
+                key="mobile"
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.95 }}
+                transition={{ duration: 0.2 }}
+                className="flex justify-center py-4"
+              >
+                <iPhoneMockup
+                  screenshot={finalMobileScreenshot}
+                  title={title}
+                />
+              </motion.div>
+            )}
+          </AnimatePresence>
 
           {/* Subtle Hover Overlay */}
           <div className="absolute inset-0 bg-black/0 group-hover:bg-black/5 transition-colors duration-300 rounded-lg pointer-events-none" />

@@ -4,6 +4,8 @@ import { useState } from 'react';
 import PortfolioCard from '@/components/PortfolioCard';
 import WebsiteShowcase from '@/components/WebsiteShowcase';
 import SocialMediaShowcase from '@/components/SocialMediaShowcase';
+import SEOShowcase from '@/components/SEOShowcase';
+import DesignShowcase from '@/components/DesignShowcase';
 import { urlFor } from '@/lib/sanity';
 
 interface PortfolioItem {
@@ -14,23 +16,37 @@ interface PortfolioItem {
   description: string;
   tags: string[];
   images?: any[];
+  desktopScreenshot?: any;
+  mobileScreenshot?: any;
   projectType?: 'website' | 'social-media' | 'other';
+  servicesProvided?: string[];
+  displayType?: 'web-mockup' | 'social-card' | 'seo-card' | 'design-card' | 'generic';
 }
 
 interface PortfolioGridProps {
   items: PortfolioItem[];
 }
 
-const categories = ['All', 'Web Design', 'Development', 'SEO', 'E-commerce', 'Marketing'];
+const categories = ['All', 'Web Design', 'Social Media', 'SEO', 'Design'];
 
 export default function PortfolioGrid({ items }: PortfolioGridProps) {
   const [selectedCategory, setSelectedCategory] = useState('All');
 
+  // Map display names to service values
+  const categoryMap: Record<string, string> = {
+    'Web Design': 'web-design',
+    'Social Media': 'social-media',
+    'SEO': 'seo',
+    'Design': 'design'
+  };
+
   const filteredItems = selectedCategory === 'All'
     ? items
-    : items.filter(item => item.tags?.some(tag =>
-        tag.toLowerCase().includes(selectedCategory.toLowerCase())
-      ));
+    : items.filter(item => {
+        const services = item.servicesProvided || (item.projectType ? [item.projectType] : []);
+        const categoryValue = categoryMap[selectedCategory];
+        return services.includes(categoryValue);
+      });
 
   return (
     <>
@@ -63,6 +79,8 @@ export default function PortfolioGrid({ items }: PortfolioGridProps) {
               // Safely generate image URLs with error handling
               let imageUrl: string | undefined;
               let imageObjects: Array<{ url: string; asset: any }> | undefined;
+              let desktopScreenshotUrl: string | undefined;
+              let mobileScreenshotUrl: string | undefined;
 
               try {
                 imageUrl = item.images?.[0] ? urlFor(item.images[0]).width(800).height(600).url() : undefined;
@@ -70,14 +88,35 @@ export default function PortfolioGrid({ items }: PortfolioGridProps) {
                   url: urlFor(img).width(800).height(600).url(),
                   asset: img
                 }));
+                desktopScreenshotUrl = item.desktopScreenshot ? urlFor(item.desktopScreenshot).width(1200).height(800).url() : undefined;
+                mobileScreenshotUrl = item.mobileScreenshot ? urlFor(item.mobileScreenshot).width(390).height(844).url() : undefined;
               } catch (error) {
                 console.error('Error generating image URLs:', error);
                 imageUrl = undefined;
                 imageObjects = undefined;
+                desktopScreenshotUrl = undefined;
+                mobileScreenshotUrl = undefined;
               }
 
-              // Render different components based on project type
-              if (item.projectType === 'website') {
+              // Determine display type - use displayType field, or fall back to legacy logic
+              let displayType = item.displayType;
+
+              // Backward compatibility: if no displayType, determine from first service or projectType
+              if (!displayType) {
+                const services = item.servicesProvided || (item.projectType ? [item.projectType] : []);
+                const primaryService = services[0];
+
+                if (primaryService === 'web-design' || item.projectType === 'website') {
+                  displayType = 'web-mockup';
+                } else if (primaryService === 'social-media' || item.projectType === 'social-media') {
+                  displayType = 'social-card';
+                } else {
+                  displayType = 'generic';
+                }
+              }
+
+              // Render component based on displayType
+              if (displayType === 'web-mockup') {
                 return (
                   <WebsiteShowcase
                     key={item._id}
@@ -88,9 +127,11 @@ export default function PortfolioGrid({ items }: PortfolioGridProps) {
                     tags={item.tags || []}
                     image={imageUrl}
                     images={imageObjects}
+                    desktopScreenshot={desktopScreenshotUrl}
+                    mobileScreenshot={mobileScreenshotUrl}
                   />
                 );
-              } else if (item.projectType === 'social-media') {
+              } else if (displayType === 'social-card') {
                 return (
                   <SocialMediaShowcase
                     key={item._id}
@@ -103,8 +144,32 @@ export default function PortfolioGrid({ items }: PortfolioGridProps) {
                     images={imageObjects}
                   />
                 );
+              } else if (displayType === 'seo-card') {
+                return (
+                  <SEOShowcase
+                    key={item._id}
+                    title={item.title}
+                    slug={item.slug}
+                    category={item.client}
+                    description={item.description}
+                    tags={item.tags || []}
+                    image={imageUrl}
+                  />
+                );
+              } else if (displayType === 'design-card') {
+                return (
+                  <DesignShowcase
+                    key={item._id}
+                    title={item.title}
+                    slug={item.slug}
+                    category={item.client}
+                    description={item.description}
+                    tags={item.tags || []}
+                    image={imageUrl}
+                  />
+                );
               } else {
-                // Default fallback to PortfolioCard
+                // Generic card fallback
                 return (
                   <PortfolioCard
                     key={item._id}
