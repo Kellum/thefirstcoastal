@@ -79,7 +79,7 @@ export async function getBlogPosts() {
     `*[_type == "blogPost"] | order(publishedDate desc) {
       _id,
       title,
-      slug,
+      "slug": slug.current,
       author,
       publishedDate,
       excerpt,

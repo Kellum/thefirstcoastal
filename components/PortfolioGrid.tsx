@@ -60,11 +60,21 @@ export default function PortfolioGrid({ items }: PortfolioGridProps) {
         <div className="max-w-7xl mx-auto px-6">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {filteredItems.map((item) => {
-              const imageUrl = item.images?.[0] ? urlFor(item.images[0]).width(800).height(600).url() : undefined;
-              const imageObjects = item.images?.map(img => ({
-                url: urlFor(img).width(800).height(600).url(),
-                asset: img
-              }));
+              // Safely generate image URLs with error handling
+              let imageUrl: string | undefined;
+              let imageObjects: Array<{ url: string; asset: any }> | undefined;
+
+              try {
+                imageUrl = item.images?.[0] ? urlFor(item.images[0]).width(800).height(600).url() : undefined;
+                imageObjects = item.images?.filter(img => img).map(img => ({
+                  url: urlFor(img).width(800).height(600).url(),
+                  asset: img
+                }));
+              } catch (error) {
+                console.error('Error generating image URLs:', error);
+                imageUrl = undefined;
+                imageObjects = undefined;
+              }
 
               // Render different components based on project type
               if (item.projectType === 'website') {

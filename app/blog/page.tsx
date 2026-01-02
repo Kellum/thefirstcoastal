@@ -3,7 +3,14 @@ import { getBlogPosts } from '@/lib/sanity';
 import { urlFor } from '@/lib/sanity';
 
 export default async function Blog() {
-  const blogPosts = await getBlogPosts();
+  let blogPosts;
+
+  try {
+    blogPosts = await getBlogPosts();
+  } catch (error) {
+    console.error('Error fetching blog posts:', error);
+    blogPosts = [];
+  }
 
   return (
     <div className="min-h-screen">
@@ -25,7 +32,7 @@ export default async function Blog() {
               {blogPosts.map((post: any) => (
                 <Link
                   key={post._id}
-                  href={`/blog/${post.slug.current}`}
+                  href={`/blog/${post.slug}`}
                   className="group"
                 >
                   <article className="overflow-hidden rounded-lg border border-gray-200 hover:border-coastal transition-all duration-300 hover:shadow-lg">

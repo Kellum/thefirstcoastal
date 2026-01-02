@@ -3,7 +3,14 @@ import PortfolioGrid from '@/components/PortfolioGrid';
 import Link from 'next/link';
 
 export default async function Work() {
-  const portfolioItems = await getPortfolioItems();
+  let portfolioItems;
+
+  try {
+    portfolioItems = await getPortfolioItems();
+  } catch (error) {
+    console.error('Error fetching portfolio items:', error);
+    portfolioItems = [];
+  }
 
   return (
     <div className="min-h-screen">
