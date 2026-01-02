@@ -39,27 +39,7 @@ const serviceIcons: Record<string, JSX.Element> = {
 export default function ServiceTabs({ services }: ServiceTabsProps) {
   const [activeTab, setActiveTab] = useState(services[0]);
 
-  // Don't show tabs if only one service
-  if (services.length <= 1) {
-    return null;
-  }
-
-  const scrollToSection = (service: string) => {
-    const element = document.getElementById(`section-${service}`);
-    if (element) {
-      const offset = 100; // Account for sticky header
-      const elementPosition = element.getBoundingClientRect().top;
-      const offsetPosition = elementPosition + window.pageYOffset - offset;
-
-      window.scrollTo({
-        top: offsetPosition,
-        behavior: 'smooth'
-      });
-      setActiveTab(service);
-    }
-  };
-
-  // Scroll spy effect
+  // Scroll spy effect - must be called before any early returns
   useEffect(() => {
     const handleScroll = () => {
       const sections = services.map(service => {
@@ -88,6 +68,26 @@ export default function ServiceTabs({ services }: ServiceTabsProps) {
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, [services]);
+
+  const scrollToSection = (service: string) => {
+    const element = document.getElementById(`section-${service}`);
+    if (element) {
+      const offset = 100; // Account for sticky header
+      const elementPosition = element.getBoundingClientRect().top;
+      const offsetPosition = elementPosition + window.pageYOffset - offset;
+
+      window.scrollTo({
+        top: offsetPosition,
+        behavior: 'smooth'
+      });
+      setActiveTab(service);
+    }
+  };
+
+  // Don't show tabs if only one service
+  if (services.length <= 1) {
+    return null;
+  }
 
   return (
     <div className="sticky top-20 z-40 bg-white/95 backdrop-blur-sm border-b border-gray-200 mb-12">
