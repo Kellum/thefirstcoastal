@@ -1,6 +1,6 @@
 # The First Coastal
 
-A clean, minimal marketing website for The First Coastal - Northeast Florida's premier marketing agency.
+A website for The First Coastal - helping Northeast Florida businesses make better decisions about their online presence.
 
 ## Tech Stack
 
@@ -90,14 +90,11 @@ npm start
 
 ## Deployment
 
-This project is ready to deploy on Vercel, Netlify, or any platform that supports Next.js.
+This project is deployed on Railway with automatic deployments from GitHub.
 
-### Vercel Deployment
+### Railway Deployment
 
-```bash
-npm install -g vercel
-vercel
-```
+Railway automatically deploys when you push to the connected GitHub repository. See `RAILWAY_DEPLOYMENT.md` for detailed setup instructions.
 
 ## License
 

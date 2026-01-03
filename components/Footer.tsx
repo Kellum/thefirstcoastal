@@ -11,7 +11,7 @@ export default function Footer() {
           <div>
             <h3 className="text-xl font-bold mb-4">The First Coastal</h3>
             <p className="text-gray-400 text-sm">
-              Northeast Florida&apos;s premier marketing agency. Web design, development, SEO, and social media services.
+              Helping Northeast Florida businesses make better decisions about their online presence. Web design, development, SEO, strategy.
             </p>
           </div>
 

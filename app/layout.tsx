@@ -12,9 +12,9 @@ const montserrat = Montserrat({
 });
 
 export const metadata: Metadata = {
-  title: 'The First Coastal - Northeast Florida Marketing Agency',
-  description: 'Premier marketing agency serving Northeast Florida. Specializing in web design, development, SEO, and social media services.',
-  keywords: 'marketing agency, web design, web development, SEO, social media, Northeast Florida, First Coast',
+  title: 'The First Coastal - Web Design & Development in Northeast Florida',
+  description: 'We help Northeast Florida businesses make better decisions about their online presence. Web design, development, SEO, and strategy consulting.',
+  keywords: 'web design, web development, SEO, digital strategy, Northeast Florida, First Coast, Jacksonville, St. Augustine',
 };
 
 export default function RootLayout({

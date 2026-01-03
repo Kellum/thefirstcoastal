@@ -6,7 +6,7 @@
 
 ## Executive Summary
 
-The First Coastal is a Next.js 14 marketing website with fully integrated Sanity CMS. The site is 95% production-ready and should be deployed to **Vercel** (not Railway). No custom backend is needed - it's a pure JAMstack architecture.
+The First Coastal is a Next.js 14 website with fully integrated Sanity CMS. The site is deployed to **Railway** with automatic deployments from GitHub. No custom backend is needed - it's a pure JAMstack architecture.
 
 ---
 
@@ -86,39 +86,22 @@ Located in `/lib/sanity.ts`:
 
 ### Data Flow
 ```
-User Request → Vercel Edge → Next.js SSG/ISR → Sanity API → Cached Response
+User Request → Railway → Next.js SSG/ISR → Sanity API → Cached Response
 ```
 
 ---
 
-## Hosting Platform Recommendation
+## Hosting Platform
 
-### RECOMMENDED: Vercel ✅
+### Current: Railway ✅
 
-#### Why Vercel is Perfect for This Site:
-1. **Zero-config deployment** for Next.js (built by same company)
-2. **Automatic optimizations**: ISR, SSG, image optimization, edge caching
-3. **No backend = No Railway advantage** (Railway excels at custom servers/databases)
-4. **Cost-effective**:
-   - Vercel Free Tier: 100GB bandwidth, unlimited requests
-   - Railway charges for compute even when idle
-5. **Native Sanity integration**:
-   - Webhook support for instant rebuilds
-   - ISR for content updates without full rebuilds
-6. **Developer experience**:
-   - Git push → auto-deploy
-   - Preview deployments for PRs
-   - Built-in analytics
-   - Environment variable management UI
+The site is deployed on Railway with automatic deployments from GitHub.
 
-### When to Consider Railway Instead:
-- ❌ Custom Node.js/Express backend
-- ❌ PostgreSQL/MongoDB database
-- ❌ Long-running background jobs
-- ❌ WebSocket servers
-- ❌ Docker containers
-
-**This site has NONE of these**, so Railway provides zero benefit.
+#### Railway Setup:
+1. **Git Integration**: Connected to GitHub repository
+2. **Auto-deployments**: Pushes to main branch trigger automatic deploys
+3. **Environment Variables**: Configured in Railway dashboard
+4. **Build Configuration**: Standard Next.js build process
 
 ---
 
@@ -172,7 +155,7 @@ setTimeout(() => { ... }, 1000);
 
 #### A. Analytics
 - [ ] No analytics installed
-- **Recommended**: Vercel Analytics (built-in) or Google Analytics
+- **Recommended**: Google Analytics or similar analytics solution
 
 #### B. SEO Optimization
 - [ ] Meta tags incomplete
@@ -224,7 +207,7 @@ NEXT_PUBLIC_SANITY_API_VERSION=2024-01-01
 7. Kill redundant dev servers
 8. Test build: `npm run build`
 9. Add custom 404 page (optional)
-10. Set up Vercel deployment
+10. Verify Railway deployment configuration
 
 ---
 
@@ -237,13 +220,9 @@ NEXT_PUBLIC_SANITY_API_VERSION=2024-01-01
 4. **Add basic SEO meta tags** to `app/layout.tsx`
 
 ### Short-term (First Week)
-1. **Deploy to Vercel**
-   ```bash
-   npm install -g vercel
-   vercel
-   ```
+1. **Verify Railway deployment** is working correctly
 2. **Set up contact form** with Resend or similar
-3. **Add analytics** (Vercel Analytics or GA4)
+3. **Add analytics** (Google Analytics or similar)
 4. **Configure Sanity webhooks** for auto-revalidation
 
 ### Medium-term (First Month)
@@ -257,12 +236,8 @@ NEXT_PUBLIC_SANITY_API_VERSION=2024-01-01
 
 ## Cost Estimate
 
-### Vercel Hosting
-- **Free Tier**: $0/month
-  - 100GB bandwidth
-  - Unlimited requests
-  - Preview deployments
-  - Analytics (basic)
+### Railway Hosting
+- Check Railway dashboard for current plan and usage
 
 ### Sanity CMS
 - **Free Tier**: $0/month (likely sufficient)
@@ -272,8 +247,8 @@ NEXT_PUBLIC_SANITY_API_VERSION=2024-01-01
   - 10GB bandwidth
   - 5GB assets
 
-### Total Monthly Cost: $0 🎉
-(Scales up only when needed)
+### Total Monthly Cost
+Check Railway dashboard for current hosting costs. Sanity CMS likely remains on free tier.
 
 ---
 
@@ -323,9 +298,9 @@ npm start      # Runs production server locally
 
 ## Conclusion
 
-**The First Coastal is production-ready and should be deployed to Vercel.** The site is a textbook JAMstack application with no need for custom backend infrastructure. Vercel will provide the best performance, developer experience, and cost-effectiveness for this architecture.
+**The First Coastal is deployed to Railway** with automatic deployments from GitHub. The site is a JAMstack application with no need for custom backend infrastructure.
 
-**Estimated time to production**: 2-4 hours (fixing issues + deployment)
+**Status**: Live on Railway with automatic deployments configured.
 
 ---
 

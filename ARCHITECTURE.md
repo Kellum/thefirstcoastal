@@ -1,7 +1,7 @@
 # The First Coastal - Architecture Documentation
 
 ## Overview
-The First Coastal is a marketing agency website built with modern web technologies, designed to showcase portfolio work, publish blog content, and eventually manage client relationships through a custom admin dashboard.
+The First Coastal is a business website built with modern web technologies, designed to showcase portfolio work, publish blog content, and eventually manage client relationships through a custom admin dashboard.
 
 ---
 
@@ -15,7 +15,7 @@ The First Coastal is a marketing agency website built with modern web technologi
 - **Framer Motion 11.11.17** - Animation library
 
 ### Content Management
-- **Sanity.io** - Headless CMS for portfolio items, blog posts, and marketing content
+- **Sanity.io** - Headless CMS for portfolio items, blog posts, and public-facing content
 - **Embedded Sanity Studio** - CMS editor interface accessible at `/studio` route
 
 ---
@@ -198,7 +198,7 @@ If we connect them in the future:
 
 ### Phase 1 (Current)
 **Main Site + Sanity Studio:**
-- Platform: Vercel (or Netlify)
+- Platform: Railway
 - Deploy: Single deployment
 - URL: `thefirstcoastal.com`
 - CMS: `thefirstcoastal.com/studio`
@@ -206,7 +206,7 @@ If we connect them in the future:
 
 ### Phase 2 (Future)
 **Admin Dashboard:**
-- Platform: Vercel (or Netlify)
+- Platform: Railway
 - Deploy: Separate deployment
 - URL: `admin.thefirstcoastal.com`
 - Backend: Supabase (managed)

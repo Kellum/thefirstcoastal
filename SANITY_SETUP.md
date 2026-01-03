@@ -187,7 +187,7 @@ The pages will automatically fetch and display your Sanity content!
 
 ## Deployment
 
-When you're ready to deploy to production (Vercel, Netlify, etc.):
+When you're ready to deploy to production (Railway):
 
 1. **Add environment variables** to your hosting platform:
    - `NEXT_PUBLIC_SANITY_PROJECT_ID`

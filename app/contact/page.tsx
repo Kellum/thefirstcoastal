@@ -159,9 +159,9 @@ export default function Contact() {
       {/* Map/Location Section - Placeholder */}
       <section className="py-20 bg-gray-50">
         <div className="max-w-4xl mx-auto px-6 text-center">
-          <h2 className="text-3xl font-bold mb-4">Proudly Serving Northeast Florida</h2>
+          <h2 className="text-3xl font-bold mb-4">Based in Northeast Florida</h2>
           <p className="text-gray-600">
-            From Jacksonville to St. Augustine and everywhere in between, we&apos;re your local digital marketing partner.
+            From Jacksonville to St. Augustine and everywhere in between. We understand the local market.
           </p>
         </div>
       </section>

@@ -23,26 +23,26 @@ export default async function Home() {
         {/* Content */}
         <div className="relative z-10 max-w-4xl mx-auto px-6 text-center">
           <h1 className="text-5xl md:text-7xl font-bold text-white mb-6 drop-shadow-2xl">
-            Where Coastal Creativity Meets Digital Excellence
+            We Help Businesses Make Better Choices Online
           </h1>
           <p className="text-xl md:text-2xl text-white/95 mb-8 font-light drop-shadow-lg">
-            Northeast Florida&apos;s Premier Marketing Agency
+            Web design, development, SEO—the stuff that actually works
           </p>
           <p className="text-lg text-white/90 mb-12 max-w-2xl mx-auto drop-shadow-lg">
-            We craft exceptional digital experiences through web design, development, SEO, and social media marketing. Rooted in the First Coast, serving businesses across Northeast Florida.
+            Most businesses waste time and money on digital solutions that don&apos;t solve their actual problems. We help you figure out what you really need, then build it. Based in Northeast Florida.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link
               href="/work"
               className="px-8 py-4 bg-white/95 text-[#222326] rounded-lg hover:bg-white transition-all duration-200 font-medium shadow-xl hover:shadow-2xl hover:scale-105"
             >
-              View Our Work
+              See What We&apos;ve Built
             </Link>
             <Link
               href="/contact"
               className="px-8 py-4 bg-[#5D878C] text-white rounded-lg hover:bg-[#385154] transition-all duration-200 font-medium shadow-xl hover:shadow-2xl hover:scale-105"
             >
-              Get In Touch
+              Let&apos;s Talk
             </Link>
           </div>
         </div>
@@ -51,7 +51,7 @@ export default async function Home() {
       {/* Services Section */}
       <section className="py-24 bg-white">
         <div className="max-w-7xl mx-auto px-6">
-          <h2 className="text-4xl md:text-5xl font-bold text-center mb-16">Our Services</h2>
+          <h2 className="text-4xl md:text-5xl font-bold text-center mb-16">What We Do</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
             {services && services.length > 0 ? (
               services.map((service: any) => (
@@ -68,19 +68,19 @@ export default async function Home() {
               <>
                 <div className="p-8 border border-gray-200 rounded-lg hover:border-coastal hover:shadow-lg transition-all duration-300">
                   <h3 className="text-2xl font-bold mb-4 text-[#222326]">Web Design</h3>
-                  <p className="text-gray-600">Beautiful, user-focused designs that captivate and convert.</p>
+                  <p className="text-gray-600">Interfaces that make sense. No mystery meat navigation, no confusion—just clear, functional design that helps people get things done.</p>
                 </div>
                 <div className="p-8 border border-gray-200 rounded-lg hover:border-coastal hover:shadow-lg transition-all duration-300">
                   <h3 className="text-2xl font-bold mb-4 text-[#222326]">Development</h3>
-                  <p className="text-gray-600">Fast, scalable websites built with modern technology.</p>
+                  <p className="text-gray-600">We build websites with modern frameworks that actually perform. Fast loading, accessible, maintainable code. The technical stuff, done right.</p>
                 </div>
                 <div className="p-8 border border-gray-200 rounded-lg hover:border-coastal hover:shadow-lg transition-all duration-300">
                   <h3 className="text-2xl font-bold mb-4 text-[#222326]">SEO</h3>
-                  <p className="text-gray-600">Rank higher and reach more customers organically.</p>
+                  <p className="text-gray-600">Help people find you when they search for what you offer. Technical SEO, content strategy, the works—without the snake oil.</p>
                 </div>
                 <div className="p-8 border border-gray-200 rounded-lg hover:border-coastal hover:shadow-lg transition-all duration-300">
-                  <h3 className="text-2xl font-bold mb-4 text-[#222326]">Social Media</h3>
-                  <p className="text-gray-600">Engaging content that builds your brand presence.</p>
+                  <h3 className="text-2xl font-bold mb-4 text-[#222326]">Strategy</h3>
+                  <p className="text-gray-600">Figure out what you actually need before spending money building it. Sometimes the answer isn&apos;t &quot;build everything.&quot;</p>
                 </div>
               </>
             )}
@@ -91,15 +91,15 @@ export default async function Home() {
       {/* CTA Section */}
       <section className="py-24 bg-[#222326] text-white">
         <div className="max-w-4xl mx-auto px-6 text-center">
-          <h2 className="text-4xl md:text-5xl font-bold mb-6">Ready to elevate your brand?</h2>
+          <h2 className="text-4xl md:text-5xl font-bold mb-6">Have a Problem to Solve?</h2>
           <p className="text-xl text-gray-300 mb-8">
-            Let&apos;s create something exceptional together.
+            Let&apos;s figure out if we can help, and how.
           </p>
           <Link
             href="/contact"
             className="inline-block px-8 py-4 bg-[#5D878C] text-white rounded-lg hover:bg-[#385154] transition-colors duration-200 font-medium shadow-md hover:shadow-lg"
           >
-            Start Your Project
+            Start a Conversation
           </Link>
         </div>
       </section>

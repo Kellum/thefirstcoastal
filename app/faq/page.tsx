@@ -8,36 +8,36 @@ export default function FAQ() {
 
   const faqs = [
     {
-      question: 'What services does The First Coastal offer?',
-      answer: 'We specialize in web design, web development, SEO optimization, and social media marketing. Our team provides end-to-end digital marketing solutions tailored to your business needs.',
+      question: 'What exactly do you do?',
+      answer: 'We help businesses figure out what they actually need for their online presence, then build it. That includes web design, development, SEO, and strategy consulting. Sometimes we build new sites, sometimes we fix existing ones, sometimes we help you realize you need something completely different than what you thought.',
     },
     {
       question: 'Do you work with businesses outside Northeast Florida?',
-      answer: 'While we\'re based in Northeast Florida and have deep expertise in the First Coast market, we work with clients across the country. Our local focus gives us unique insights, but our reach is nationwide.',
+      answer: 'Yes, but we\'re based in Northeast Florida (Jacksonville to St. Augustine area) and that\'s where most of our clients are. We understand the local market well, which helps when making strategic decisions.',
     },
     {
-      question: 'How long does a typical web design project take?',
-      answer: 'Project timelines vary based on complexity and scope. A standard website typically takes 4-8 weeks from kickoff to launch. We\'ll provide a detailed timeline during our initial consultation.',
+      question: 'How long does a website project take?',
+      answer: 'Depends entirely on what you need. A straightforward business site might take 4-6 weeks. Something more complex could take months. We\'ll give you an honest timeline once we understand your specific situation—no padding, no games.',
     },
     {
-      question: 'What is your pricing structure?',
-      answer: 'Every project is unique, so we provide custom quotes based on your specific needs and goals. Contact us for a free consultation and detailed proposal.',
+      question: 'How much does it cost?',
+      answer: 'Every project is different, so we can\'t give you a price until we know what you need. We\'ll talk through your situation, figure out what makes sense, and give you a detailed quote. No surprise fees, no upselling things you don\'t need.',
     },
     {
-      question: 'Do you offer ongoing support after launch?',
-      answer: 'Absolutely! We offer various maintenance and support packages to keep your website running smoothly, secure, and up-to-date. We\'re here for the long haul.',
+      question: 'Do you offer support after a site launches?',
+      answer: 'Yes. Websites need updates, security patches, and occasional fixes. We offer maintenance packages, or we can train you to handle basic updates yourself if you prefer. Either way, we don\'t disappear after launch.',
     },
     {
-      question: 'Can you help improve my existing website\'s SEO?',
-      answer: 'Yes! We provide comprehensive SEO audits and optimization services for existing websites. We\'ll identify opportunities and implement strategies to improve your search rankings.',
+      question: 'Can you fix my existing website\'s SEO?',
+      answer: 'Probably. We\'ll audit your site, identify what\'s actually hurting you (versus what doesn\'t matter), and give you a clear plan for improvement. SEO isn\'t magic—it\'s technical fixes, good content, and patience.',
     },
     {
-      question: 'What makes The First Coastal different?',
-      answer: 'We combine technical excellence with local market knowledge. Our team doesn\'t just build websites—we create digital experiences that resonate with your audience and drive measurable results.',
+      question: 'What makes you different from other web development companies?',
+      answer: 'We\'ll tell you the truth even when it means less work for us. We explain technical stuff without condescending. We don\'t sell you things you don\'t need. And we actually answer our phones.',
     },
     {
       question: 'How do I get started?',
-      answer: 'Simply reach out through our contact page or give us a call. We\'ll schedule a free consultation to discuss your goals and how we can help achieve them.',
+      answer: 'Contact us through the form on our contact page. We\'ll set up a call to talk through what you\'re trying to solve, answer your questions, and figure out if we\'re a good fit. No pressure, no sales pitch.',
     },
   ];
 
@@ -52,7 +52,7 @@ export default function FAQ() {
         <div className="max-w-4xl mx-auto px-6 text-center">
           <h1 className="text-6xl md:text-7xl font-bold text-[#222326] mb-6">FAQ</h1>
           <p className="text-xl text-[#3B3C40] font-light">
-            Common questions about our services
+            Common questions, straight answers
           </p>
         </div>
       </section>

@@ -1,7 +1,7 @@
 # The First Coastal - Design System
 
 ## Brand Overview
-The First Coastal is a Northeast Florida marketing agency specializing in web design, development, SEO, and social media services. Our brand identity reflects the coastal environment and professional excellence.
+The First Coastal helps Northeast Florida businesses make better decisions about their online presence through web design, development, SEO, and strategic consulting. Our brand identity reflects the coastal environment and straightforward technical expertise.
 
 ## Logo & Brand Mark
 
@@ -9,7 +9,7 @@ The First Coastal is a Northeast Florida marketing agency specializing in web de
 - **File:** `the_first_coastal_logo_highres.png`
 - **Location:** `/media_assets/` (source), `/public/logo.png` (web)
 - **Dimensions:** 50x50px (navigation), scalable for other uses
-- **Usage:** Primary brand identifier in navigation, headers, and marketing materials
+- **Usage:** Primary brand identifier in navigation, headers, and site materials
 
 ### Logo Guidelines
 - Always maintain clear space around the logo (minimum 10px padding)
