@@ -1,107 +1,163 @@
-# Development Checkpoint - January 2, 2026
+# Development Checkpoint - January 3, 2026
 
-## Session: Service Categories & Display Type System
+## Session: Web Design Project Classification & Technical Details
 
-**Tags:** `#cms` `#sanity` `#ui` `#refactor` `#portfolio` `#showcase-components`
+**Tags:** `#cms` `#sanity` `#ui` `#portfolio` `#web-design` `#technical-details`
 
 ---
 
 ## Session Goals
 
-1. Update service categories across entire application (Web Design, Social Media, SEO, Design)
-2. Implement Primary Display Type field in Sanity for explicit card style control
-3. Create dedicated showcase components for SEO and Design projects
-4. Ensure consistent naming and functionality across all systems
+1. Remove card container from client logo on project pages
+2. Add web design project type classification (New Build, Redesign, Maintenance)
+3. Add conditional technical detail fields for different project types
+4. Fix Sanity CDN caching issue preventing immediate content updates
 
 ---
 
 ## Work Completed
 
-### 1. Updated Service Categories System-Wide
+### 1. Client Logo Display Cleanup
 
-**Changes Made:**
-- Updated from: `Website/Web App`, `Social Media Marketing`, `SEO`, `Branding/Design`, `Other`
-- Updated to: `Web Design`, `Social Media`, `SEO`, `Design`
-- Removed the "Other" category entirely
-
-**Files Updated:**
-- `sanity/schemas/portfolioItem.ts` - Updated servicesProvided options and all conditional field visibility
-- `components/ServiceTabs.tsx` - Updated service labels and icons mapping
-- `app/work/[slug]/page.tsx` - Updated section IDs and headings
-- `components/PortfolioGrid.tsx` - Updated filter categories and category mapping
-
-**Service Value Mappings:**
-```typescript
-'Web Design' → 'web-design'
-'Social Media' → 'social-media'
-'SEO' → 'seo'
-'Design' → 'design'
-```
-
-### 2. Implemented Primary Display Type Field
-
-**Problem Identified:**
-- Card display type was determined by **first service** in array
-- No explicit control over which card style appeared on work grid
-- Projects with multiple services could only show one style
+**Problem:**
+- Client logo displayed in a white card container with shadow and padding
+- User wanted cleaner, more minimal logo display
 
 **Solution:**
-Added `displayType` field to Sanity schema with 5 options:
-1. `web-mockup` - Website Mockup (Browser/Phone)
-2. `social-card` - Social Media Card (Instagram-style)
-3. `seo-card` - SEO Metrics Dashboard ✨ NEW
-4. `design-card` - Design Portfolio Card ✨ NEW
-5. `generic` - Generic Card (Simple fallback)
+- Removed card wrapper div with `bg-white rounded-lg shadow-md p-6`
+- Logo now displays directly without background or container
+- Increased max height from 20 to 32 units (since padding removed)
+- Maintained aspect ratio with `object-contain`
+
+**File Updated:**
+- `components/ProjectHeader.tsx` - Simplified logo display structure
+
+### 2. Web Design Project Type Classification System
+
+**Problem Identified:**
+- No way to distinguish between new builds vs. redesigns vs. maintenance
+- Critical information for potential clients to understand project scope
+- No fields to explain technical challenges or platform details
+
+**Solution:**
+Added comprehensive project classification system to Sanity schema:
+
+#### **New Field: `websiteProjectType`**
+Radio button field with 3 options:
+- 🚀 **New Website Build** - Brand new site from scratch
+- ✨ **Website Redesign/Update** - Updating existing site
+- 🔧 **Website Maintenance & Improvements** - Ongoing improvements
+
+#### **For New Builds** (conditionally shown):
+1. **`websiteTechnologies`** (Array/Tags)
+   - Technologies used to build the site
+   - Examples: Next.js, React, WordPress, Shopify
+
+2. **`websiteChallenges`** (Rich Text)
+   - Technical obstacles that needed to be overcome
+   - Shows problem-solving capabilities
+
+3. **`websiteSolutions`** (Rich Text)
+   - How challenges were solved
+   - Demonstrates technical expertise
+
+#### **For Redesigns/Maintenance** (conditionally shown):
+1. **`websiteExistingPlatform`** (Array/Tags)
+   - Original platform/technologies
+   - Examples: WordPress, Wix, Squarespace, custom HTML
+
+2. **`websiteIssues`** (Rich Text)
+   - Problems with the previous site
+   - What needed to be fixed
+
+3. **`websiteImprovements`** (Rich Text)
+   - What was done to fix or improve
+   - Shows value delivered to client
+
+**Files Updated:**
+- `sanity/schemas/portfolioItem.ts` - Added 7 new fields with conditional visibility
+- `lib/sanity.ts` - Updated query to fetch new fields
+- `app/work/[slug]/page.tsx` - Added technical details display section
+
+### 3. Technical Details Display on Project Pages
 
 **Implementation:**
-- Added field to `sanity/schemas/portfolioItem.ts` after `servicesProvided`
-- Updated Sanity queries in `lib/sanity.ts` to fetch `displayType`
-- Updated TypeScript interface in `components/PortfolioGrid.tsx`
-- Modified rendering logic to prioritize `displayType` over legacy service-based logic
-- Maintained backward compatibility for existing projects
+Added styled card section in Web Design section that displays:
 
-### 3. Created New Showcase Components
+- **Project Type Badge** with emoji (🚀/✨/🔧) and colored background
+- **Technology/Platform Tags** as pill-shaped badges
+- **Rich Text Sections** for challenges/solutions or issues/improvements
+- **Conditional Rendering** based on project type selection
+- **Gradient Background** matching design system (`from-[#F0F4F5] to-white`)
 
-**SEOShowcase Component** (`components/SEOShowcase.tsx`):
-- Analytics-focused card design
-- **Performance Metrics Grid:**
-  - Lighthouse Performance Score (95/100) with progress bar
-  - Traffic Increase (+65%) with progress bar
-  - Search Rank Increase (+24 positions)
-  - Page Speed (1.2 sec load time)
-- **Traffic Growth Chart** - Simple bar chart visualization
-- **Color-coded Metrics:**
-  - Green for performance
-  - Blue for traffic
-  - Purple for rankings
-  - Orange for speed
-- **SEO Badge** - "Optimized" status indicator
+**Example Display for New Build:**
+```
+🚀 New Website Build
 
-**DesignShowcase Component** (`components/DesignShowcase.tsx`):
-- Creative portfolio card design
-- **Client Avatar** with gradient background and initial
-- **Design Tools Badges** - Photoshop (Ps) and Illustrator (Ai) icons
-- **Main Showcase Area** - Shows project image or creative gradient pattern
-- **Design Details Grid:**
-  - Color palette swatches (3 colors)
-  - Typography sample with custom font indicator
-  - Design style indicator (Modern)
-- **Decorative Elements** - Gradient overlays and floating shapes when no image
+Technologies Used
+[Next.js] [React] [TypeScript] [Tailwind CSS]
 
-### 4. Updated Filtering & Rendering Logic
+Challenges & Obstacles
+[Rich text content about technical challenges]
 
-**PortfolioGrid Updates:**
-- Imported new `SEOShowcase` and `DesignShowcase` components
-- Updated `categoryMap` for filter buttons to match new service values
-- Enhanced rendering logic with new card types:
-  ```typescript
-  if (displayType === 'web-mockup') → WebsiteShowcase
-  else if (displayType === 'social-card') → SocialMediaShowcase
-  else if (displayType === 'seo-card') → SEOShowcase  // NEW
-  else if (displayType === 'design-card') → DesignShowcase  // NEW
-  else → PortfolioCard (generic fallback)
-  ```
-- Maintained backward compatibility with legacy `projectType` field
+Solutions Implemented
+[Rich text content about how challenges were solved]
+```
+
+**Example Display for Redesign:**
+```
+✨ Website Redesign
+
+Original Platform
+[WordPress] [WooCommerce]
+
+Issues with Previous Site
+[Rich text content about problems]
+
+Improvements Made
+[Rich text content about fixes/improvements]
+```
+
+### 4. Fixed Sanity CDN Caching Issue
+
+**Problem:**
+- User changed displayType in Sanity Studio
+- Production site didn't update for 5-60 minutes
+- CDN was serving cached data
+
+**Root Cause:**
+- `useCdn: true` in Sanity client configuration
+- Sanity CDN caches content for performance
+- Changes in Studio don't appear until cache expires
+
+**Solution:**
+Changed Sanity client configuration:
+```typescript
+// Before
+useCdn: true
+
+// After
+useCdn: false  // Disabled CDN for immediate updates
+```
+
+**Tradeoffs Explained:**
+- ✅ Changes in Sanity Studio appear immediately
+- ✅ Always fresh data (no stale content)
+- ⚠️ Slightly slower response (~100-300ms extra)
+- ⚠️ More API requests (not a concern with current traffic)
+
+**Decision:** Keep CDN disabled during active development phase. Can re-enable later when site is stable and traffic grows.
+
+**File Updated:**
+- `lib/sanity.ts` - Changed `useCdn` from `true` to `false`
+
+### 5. Added Lara's Bakery Media Assets
+
+**Files Added:**
+- `media_assets/Laras Bakery/laras-bakery-logo.webp` (97KB, transparent)
+- `media_assets/Laras Bakery/laras-bakery-home-page-desktop.png`
+- `media_assets/Laras Bakery/laras-bakery-palmvalley-iPhone-14-Pro-Max.png`
+- Additional bakery photos (IMG_3599.jpg, IMG_3600.jpg, IMG_3601.jpg)
 
 ---
 
@@ -109,13 +165,14 @@ Added `displayType` field to Sanity schema with 5 options:
 
 | Decision | Reasoning |
 |----------|-----------|
-| Change "Social Media Marketing" to "Social Media Management" | "Marketing" is scary term for clients who just want posting/management services; more approachable language |
-| Remove "Other" category | Simplified to 4 clear service categories that cover all offerings |
-| Add explicit displayType field vs automatic detection | Gives full control over card appearance; projects with multiple services need explicit choice |
-| Create dedicated SEO and Design card designs | Each service type has unique visual language; SEO shows metrics/data, Design shows creativity/aesthetics |
-| Use radio buttons for displayType | Only one display style can be active at a time on work grid; clear single choice |
-| Set 'web-mockup' as default displayType | Most common project type; reasonable default for new entries |
-| Pre-generate metrics in SEO card component | Placeholder data shows card design; will be replaced with real data from Sanity fields later |
+| Remove client logo card container | Cleaner, more minimal design; logo speaks for itself without extra styling |
+| Add explicit project type classification | Critical for potential clients to understand project scope (new vs existing site) |
+| Use radio buttons for project type | Only one type can be selected; clear mutually exclusive choice |
+| Conditional fields based on project type | New builds need different information than redesigns; reduces clutter |
+| Use rich text for challenges/solutions | Allows formatting, lists, emphasis for better readability |
+| Use tags for technologies/platforms | Easy to scan; familiar pill UI pattern |
+| Disable Sanity CDN | Immediate content updates more important than slight performance gain during active development |
+| Display project type with emoji badge | Visual interest; immediately communicates project scope |
 
 ---
 
@@ -123,146 +180,150 @@ Added `displayType` field to Sanity schema with 5 options:
 
 | Challenge | Solution |
 |-----------|----------|
-| Old filter buttons showing (Development, E-commerce, Marketing) | Found and updated categories array in PortfolioGrid component |
-| Filter logic using tags instead of servicesProvided | Rewrote filtering to use servicesProvided field with categoryMap for display names |
-| No control over which card style displays | Added displayType field to Sanity with 5 explicit options |
-| SEO and Design projects using generic cards | Created two new specialized showcase components with unique designs |
-| Backward compatibility with existing projects | Added fallback logic to determine displayType from first service if not set |
-| Service name inconsistencies across app | Systematically updated all references in Sanity schema, components, and page files |
+| User wanted to convert Lara's Bakery logo | Logo already in WebP format (97KB, transparent); explained it's already web-optimized |
+| Needed different fields for different project types | Used conditional field visibility based on websiteProjectType value |
+| Project type info needed to be prominent | Created styled badge with emoji and color to draw attention |
+| Changed displayType in Sanity but production didn't update | Identified CDN caching issue; disabled CDN for immediate updates |
+| Backward compatibility for old projects | Made websiteProjectType optional; only shows section if field is populated |
 
 ---
 
 ## Current State
 
 ### What's Working
-✅ Service categories unified across entire application (Web Design, Social Media, SEO, Design)
-✅ Filter buttons on work page show correct 4 categories
-✅ Filtering works by servicesProvided instead of tags
-✅ Primary Display Type field available in Sanity Studio
-✅ 5 distinct card designs: Web Mockup, Social Card, SEO Card, Design Card, Generic
-✅ SEOShowcase component with metrics dashboard design
-✅ DesignShowcase component with creative portfolio design
-✅ Backward compatibility maintained for legacy projects
-✅ All showcase components follow same pattern (motion, tags, hover states)
+✅ Client logo displays without card container (cleaner look)
+✅ Web Design project type classification system in Sanity
+✅ 7 new conditional fields for technical details
+✅ Project type badge displays prominently on project pages
+✅ Technology/platform tags display as pills
+✅ Rich text sections for challenges/solutions/issues/improvements
+✅ Conditional rendering based on project type (new build vs redesign)
+✅ Sanity CDN disabled for immediate content updates
+✅ All changes deployed to production via Railway
 
-### Visual Card Designs
+### New CMS Fields in Sanity
 
-**Web Mockup Card:**
-- Browser chrome with window controls
-- Desktop/Mobile toggle button
-- Device mockups (browser frame or iPhone)
+**Always Shown (when Web Design selected):**
+- `websiteProjectType` - Radio buttons for project classification
 
-**Social Media Card:**
-- Instagram-style post layout
-- Profile avatar with client initial
-- Square image with social actions (heart, comment)
+**Shown for New Builds Only:**
+- `websiteTechnologies` - Tags for tech stack
+- `websiteChallenges` - Rich text for obstacles
+- `websiteSolutions` - Rich text for solutions
 
-**SEO Metrics Card:** ✨ NEW
-- Dashboard-style layout
-- 4 metric cards with progress bars
-- Traffic growth chart visualization
-- "Optimized" badge indicator
-
-**Design Portfolio Card:** ✨ NEW
-- Creative layout with gradient backgrounds
-- Design tool badges (Ps, Ai)
-- Color palette swatches
-- Typography and style indicators
-
-**Generic Card:**
-- Simple image and text layout
-- Fallback for uncategorized projects
+**Shown for Redesigns/Maintenance Only:**
+- `websiteExistingPlatform` - Tags for original platform
+- `websiteIssues` - Rich text for problems
+- `websiteImprovements` - Rich text for fixes
 
 ### Files Modified (This Session)
 
 **Sanity Schema:**
-- `sanity/schemas/portfolioItem.ts` - Updated service categories, added displayType field
+- `sanity/schemas/portfolioItem.ts` - Added websiteProjectType and 6 conditional fields
 
 **Sanity Queries:**
-- `lib/sanity.ts` - Added displayType to portfolio item queries
+- `lib/sanity.ts` - Added new fields to getPortfolioItem query, disabled CDN
 
 **Components:**
-- `components/ServiceTabs.tsx` - Updated service labels and icons
-- `components/PortfolioGrid.tsx` - Updated filters, rendering logic, imports
-- `components/SEOShowcase.tsx` - Created new SEO card component ✨
-- `components/DesignShowcase.tsx` - Created new Design card component ✨
+- `components/ProjectHeader.tsx` - Removed logo card container
 
 **Pages:**
-- `app/work/[slug]/page.tsx` - Updated section IDs and headings
+- `app/work/[slug]/page.tsx` - Added technical details display section
+
+**Media Assets:**
+- `media_assets/Laras Bakery/` - Added logo and screenshots
 
 ---
 
 ## Next Steps
 
 ### Immediate Actions
-1. **Test All Card Types**
-   - Create sample projects in Sanity with each displayType
-   - Verify all 5 card styles render correctly
-   - Test filtering with new service categories
+1. **Test in Sanity Studio**
+   - Open a web design project
+   - Select "Website Project Type"
+   - Verify conditional fields appear/hide correctly
+   - Fill in technical details for sample project
 
-2. **Populate Real SEO Metrics**
-   - Add Sanity fields for actual SEO data (optional)
-   - Update SEOShowcase to display real metrics when available
-   - Keep placeholder metrics for projects without data
+2. **Populate First Coastal Project**
+   - Set project type to "New Website Build"
+   - Add technologies: Next.js, React, TypeScript, Tailwind, Sanity
+   - Document challenges (e.g., server components, deployment)
+   - Document solutions
 
-3. **Enhance Design Card**
-   - Consider adding actual color palette from Sanity
-   - Allow custom design tool badges
-   - Make style/type fields editable
+3. **Populate Lara's Bakery Project**
+   - Determine if new build or redesign
+   - Add appropriate technical details
+   - Upload client logo to Sanity
 
-### Content & CMS
-4. **Update Existing Portfolio Items**
-   - Edit existing projects to set displayType
-   - Assign appropriate service categories
-   - Test backward compatibility
+### Content Strategy
+4. **Create Project Documentation Template**
+   - Standard format for documenting challenges
+   - Checklist of technical details to capture
+   - Examples of good challenge/solution descriptions
 
-5. **Create Sample Projects**
-   - Add SEO project example with metrics
-   - Add Design project example with portfolio work
-   - Verify each card type in production
+5. **Review Existing Projects**
+   - Add project type to all existing portfolio items
+   - Backfill technical details where possible
+   - Highlight unique challenges for each project
 
 ### Future Enhancements
-- Add dynamic metrics to SEO card from Sanity fields
-- Allow custom color palettes in Design card
-- Add animation/transition between card types
-- Consider hover states that preview project details
-- Add ability to feature specific metrics on SEO cards
-- Create admin preview of how card will appear
+- Add optional "Results" section for measurable outcomes
+- Consider adding "Timeline" field (project duration)
+- Add "Team Size" field for larger projects
+- Create client testimonials section
+- Add before/after screenshots for redesigns
+- Consider adding budget range indicators
 
-### Design System
-- Document all 5 card types in DESIGN_SYSTEM.md
-- Create visual guide for when to use each card type
-- Standardize spacing/sizing across all card components
-- Consider accessibility improvements (ARIA labels, keyboard nav)
+### Performance Considerations
+- Monitor Sanity API usage with CDN disabled
+- Consider re-enabling CDN with revalidation after site is stable
+- Implement ISR (Incremental Static Regeneration) for better performance
 
 ---
 
 ## Lessons Learned
 
-### Service Category Naming
-- **User-friendly language matters** - "Social Media Management" is less intimidating than "Marketing"
-- **Clear categories reduce friction** - 4 specific categories better than vague "Other" option
-- **Consistency is key** - Service names must match across Sanity, filters, sections, and tabs
+### CMS Field Architecture
+- **Conditional visibility reduces complexity** - Only show relevant fields based on context
+- **Rich text for detailed explanations** - Allows proper formatting and readability
+- **Tags for scannable lists** - Perfect for technologies, platforms, tools
+- **Radio buttons enforce single choice** - Clear when options are mutually exclusive
 
-### CMS Field Design
-- **Explicit > Implicit** - Better to have dedicated "displayType" field than auto-detect from services
-- **Radio buttons for single choice** - Clear UI pattern for mutually exclusive options
-- **Descriptive labels help content editors** - "Website Mockup (Browser/Phone)" clarifies what card will look like
+### Content Strategy
+- **Technical details matter for B2B** - Potential clients want to see problem-solving capabilities
+- **Project scope is critical information** - New build vs redesign changes perceived value
+- **Platform experience builds trust** - Showing familiarity with various platforms demonstrates versatility
 
-### Component Architecture
-- **Specialized components for different content types** - SEO metrics need different layout than creative design work
-- **Consistent patterns across variations** - All showcase components share same structure (motion, tags, title/description)
-- **Placeholder data in components** - Hardcoded metrics let you see design before adding CMS fields
+### Sanity CMS
+- **CDN caching can delay updates** - Trade performance for freshness during development
+- **Conditional fields keep UI clean** - Better UX than showing all fields all the time
+- **Descriptive field labels help content editors** - Clear descriptions prevent confusion
 
-### Backward Compatibility
-- **Always provide fallback logic** - Existing projects should work without manual updates
-- **Legacy field support** - Keep old projectType field for transition period
-- **Default values prevent errors** - initialValue ensures new projects have displayType set
+### UI/UX Design
+- **Less is more with logos** - Client logos don't need extra decoration
+- **Badges communicate quickly** - Emoji + color instantly conveys project type
+- **Consistent spacing matters** - Maintain design system patterns across new sections
 
 ---
 
-**Session Date:** January 2, 2026
-**Session Duration:** ~2 hours
+## Previous Session Summary
+
+**Date:** January 2, 2026
+**Focus:** Service Categories & Display Type System
+
+**Key Achievements:**
+- Updated service categories to: Web Design, Social Media, SEO, Design
+- Added Primary Display Type field for explicit card control
+- Created SEOShowcase and DesignShowcase components
+- Implemented backward compatibility for old service values
+- Fixed React Hooks and TypeScript errors in production
+
+**Result:** 5 distinct card types with full control over display style
+
+---
+
+**Session Date:** January 3, 2026
+**Session Duration:** ~1.5 hours
 **Status:** ✅ **COMPLETE**
-**Components Created:** 2 new showcase components (SEO, Design)
-**Next Review:** Test all card types with real content in Sanity
+**New Fields Created:** 7 (1 project type + 6 conditional technical detail fields)
+**Next Review:** Test new fields in Sanity Studio and populate sample projects
