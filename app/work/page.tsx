@@ -2,6 +2,9 @@ import { getPortfolioItems } from '@/lib/sanity';
 import PortfolioGrid from '@/components/PortfolioGrid';
 import Link from 'next/link';
 
+// Revalidate every 60 seconds - allows new portfolio items to appear without redeployment
+export const revalidate = 60;
+
 export default async function Work() {
   let portfolioItems;
 

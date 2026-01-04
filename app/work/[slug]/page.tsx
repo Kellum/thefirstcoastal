@@ -9,6 +9,9 @@ import SEOSection from '@/components/SEOSection';
 import PortableTextRenderer from '@/components/PortableTextRenderer';
 import { getTagColor } from '@/lib/tagColors';
 
+// Revalidate every 60 seconds - allows new portfolio items to appear without redeployment
+export const revalidate = 60;
+
 export default async function PortfolioItemPage({
   params
 }: {
