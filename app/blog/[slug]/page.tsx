@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { getBlogPost } from '@/lib/sanity';
 import { urlFor } from '@/lib/sanity';
 import { notFound } from 'next/navigation';
+import PortableTextRenderer from '@/components/PortableTextRenderer';
 
 // Revalidate every 60 seconds - allows new blog posts to appear without redeployment
 export const revalidate = 60;
@@ -80,20 +81,16 @@ export default async function BlogPost({
           </div>
         )}
 
-        {/* Content - For now just showing excerpt, will add portable text renderer */}
-        <div className="prose prose-lg max-w-none">
-          <p className="text-xl text-gray-700 leading-relaxed mb-8">
-            {post.excerpt}
-          </p>
-
-          {/* TODO: Add portable text renderer for full content */}
-          <div className="bg-[#F0F4F5] border border-[#B3CBCE] rounded-lg p-6 my-8">
-            <p className="text-[#385154]">
-              <strong>Note:</strong> Full blog content rendering will be implemented with Sanity&apos;s Portable Text renderer.
-              For now, the excerpt is displayed above.
+        {/* Content */}
+        {post.content && post.content.length > 0 ? (
+          <PortableTextRenderer value={post.content} />
+        ) : (
+          <div className="prose prose-lg max-w-none">
+            <p className="text-xl text-gray-700 leading-relaxed mb-8">
+              {post.excerpt}
             </p>
           </div>
-        </div>
+        )}
 
         {/* Tags */}
         {post.tags && post.tags.length > 0 && (
