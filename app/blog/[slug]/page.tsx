@@ -72,11 +72,11 @@ export default async function BlogPost({
 
         {/* Featured Image */}
         {hasFeaturedImage && (
-          <div className="aspect-video overflow-hidden rounded-lg mb-12">
+          <div className="mb-12 flex justify-center">
             <img
-              src={urlFor(post.featuredImage).width(1200).height(675).url()}
+              src={urlFor(post.featuredImage).width(1200).url()}
               alt={post.featuredImage.alt || post.title}
-              className="w-full h-full object-cover"
+              className="w-full max-w-4xl h-auto rounded-lg shadow-md"
             />
           </div>
         )}
