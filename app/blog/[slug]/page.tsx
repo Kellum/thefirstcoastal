@@ -76,7 +76,7 @@ export default async function BlogPost({
             <img
               src={urlFor(post.featuredImage).width(1200).url()}
               alt={post.featuredImage.alt || post.title}
-              className="w-full max-w-4xl h-auto rounded-lg shadow-md"
+              className="w-full max-w-4xl h-auto rounded-lg"
             />
           </div>
         )}
