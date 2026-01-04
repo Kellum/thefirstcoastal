@@ -6,9 +6,25 @@ interface BrowserMockupProps {
   screenshot?: string;
   title: string;
   className?: string;
+  projectUrl?: string;
 }
 
-export default function BrowserMockup({ screenshot, title, className = '' }: BrowserMockupProps) {
+export default function BrowserMockup({ screenshot, title, className = '', projectUrl }: BrowserMockupProps) {
+  // Extract domain name from projectUrl
+  const getDomainName = (url?: string): string => {
+    if (!url) {
+      return `${title.toLowerCase().replace(/\s+/g, '-')}.com`;
+    }
+
+    try {
+      const urlObj = new URL(url);
+      return urlObj.hostname.replace('www.', '');
+    } catch {
+      return `${title.toLowerCase().replace(/\s+/g, '-')}.com`;
+    }
+  };
+
+  const displayUrl = getDomainName(projectUrl);
   return (
     <div className={`bg-white rounded-lg shadow-2xl overflow-hidden ${className}`}>
       {/* Browser Chrome */}
@@ -27,7 +43,7 @@ export default function BrowserMockup({ screenshot, title, className = '' }: Bro
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
             </svg>
             <span className="truncate font-mono text-[10px]">
-              {title.toLowerCase().replace(/\s+/g, '-')}.com
+              {displayUrl}
             </span>
           </div>
         </div>

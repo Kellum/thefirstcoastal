@@ -17,6 +17,7 @@ interface WebsiteShowcaseProps {
   slug: string;
   desktopScreenshot?: string;
   mobileScreenshot?: string;
+  projectUrl?: string;
 }
 
 export default function WebsiteShowcase({
@@ -27,7 +28,8 @@ export default function WebsiteShowcase({
   tags,
   slug,
   desktopScreenshot,
-  mobileScreenshot
+  mobileScreenshot,
+  projectUrl
 }: WebsiteShowcaseProps) {
   const [viewMode, setViewMode] = useState<'desktop' | 'mobile'>('desktop');
 
@@ -86,6 +88,7 @@ export default function WebsiteShowcase({
                 <BrowserMockup
                   screenshot={finalDesktopScreenshot}
                   title={title}
+                  projectUrl={projectUrl}
                 />
               </motion.div>
             ) : (

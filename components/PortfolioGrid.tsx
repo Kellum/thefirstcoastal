@@ -21,6 +21,7 @@ interface PortfolioItem {
   projectType?: 'website' | 'social-media' | 'other';
   servicesProvided?: string[];
   displayType?: 'web-mockup' | 'social-card' | 'seo-card' | 'design-card' | 'generic';
+  projectUrl?: string;
 }
 
 interface PortfolioGridProps {
@@ -129,6 +130,7 @@ export default function PortfolioGrid({ items }: PortfolioGridProps) {
                     images={imageObjects}
                     desktopScreenshot={desktopScreenshotUrl}
                     mobileScreenshot={mobileScreenshotUrl}
+                    projectUrl={item.projectUrl}
                   />
                 );
               } else if (displayType === 'social-card') {
