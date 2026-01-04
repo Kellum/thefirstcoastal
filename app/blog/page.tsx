@@ -41,11 +41,11 @@ export default async function Blog() {
                   <article className="overflow-hidden rounded-lg border border-gray-200 hover:border-coastal transition-all duration-300 hover:shadow-lg">
                     {/* Featured Image */}
                     {post.featuredImage && (
-                      <div className="aspect-video overflow-hidden bg-gray-100">
+                      <div className="aspect-video overflow-hidden bg-gray-100 flex items-center justify-center">
                         <img
-                          src={urlFor(post.featuredImage).width(600).height(400).url()}
+                          src={urlFor(post.featuredImage).width(600).url()}
                           alt={post.featuredImage.alt || post.title}
-                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                          className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-300"
                         />
                       </div>
                     )}
