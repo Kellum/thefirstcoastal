@@ -84,7 +84,7 @@ export default function WebsiteSolutions() {
             <div className="grid md:grid-cols-2 gap-4">
               <div className="flex items-start">
                 <span className="text-coastal mr-3 mt-1">✓</span>
-                <span className="text-gray-700">Unlimited design revisions until you're satisfied</span>
+                <span className="text-gray-700">Unlimited design revisions until you&apos;re satisfied</span>
               </div>
               <div className="flex items-start">
                 <span className="text-coastal mr-3 mt-1">✓</span>
@@ -146,15 +146,15 @@ export default function WebsiteSolutions() {
       <section className="py-20 bg-gray-50">
         <div className="max-w-3xl mx-auto px-6">
           <div className="bg-white rounded-xl p-8 md:p-12 shadow-lg border-2 border-coastal/20">
-            <h2 className="text-3xl font-bold mb-6 text-[#222326]">Let's Talk About Your Project</h2>
+            <h2 className="text-3xl font-bold mb-6 text-[#222326]">Let&apos;s Talk About Your Project</h2>
             <p className="text-lg text-gray-700 mb-4 leading-relaxed">
-              We don't list specific prices because honestly, it depends. A simple brochure site is different from e-commerce. A redesign is different from starting from scratch.
+              We don&apos;t list specific prices because honestly, it depends. A simple brochure site is different from e-commerce. A redesign is different from starting from scratch.
             </p>
             <p className="text-lg text-gray-700 mb-4 leading-relaxed">
-              <span className="font-semibold text-[#222326]">Most clients invest between $1,200-$6,000</span> depending on what they need. But your budget shouldn't disqualify you—we work with businesses at different stages.
+              <span className="font-semibold text-[#222326]">Most clients invest between $1,200-$6,000</span> depending on what they need. But your budget shouldn&apos;t disqualify you—we work with businesses at different stages.
             </p>
             <p className="text-lg text-gray-700 mb-8 leading-relaxed">
-              Book a free 30-minute call and we'll tell you straight up what's possible for your situation. If we can't help, we'll point you toward someone who can.
+              Book a free 30-minute call and we&apos;ll tell you straight up what&apos;s possible for your situation. If we can&apos;t help, we&apos;ll point you toward someone who can.
             </p>
             <div className="flex flex-col sm:flex-row gap-4">
               <Link

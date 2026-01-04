@@ -61,7 +61,7 @@ export default function SocialMedia() {
                   <span className="text-coastal mr-3 mt-1">→</span>
                   <div>
                     <h3 className="font-semibold text-lg text-[#222326] mb-1">Performance Tracking</h3>
-                    <p className="text-gray-700">Monthly reports on what's working and what's not. Plain English, no vanity metrics.</p>
+                    <p className="text-gray-700">Monthly reports on what&apos;s working and what&apos;s not. Plain English, no vanity metrics.</p>
                   </div>
                 </div>
                 <div className="flex items-start">
@@ -131,7 +131,7 @@ export default function SocialMedia() {
               <span className="font-semibold text-[#222326]">Most clients invest between $1,200-$6,000</span> depending on how many platforms, how often you post, and whether you need content creation or just management.
             </p>
             <p className="text-lg text-gray-700 mb-8 leading-relaxed">
-              Let's talk about where you are now and what you're trying to accomplish. We'll figure out a plan that makes sense for your business and budget.
+              Let&apos;s talk about where you are now and what you&apos;re trying to accomplish. We&apos;ll figure out a plan that makes sense for your business and budget.
             </p>
             <div className="flex flex-col sm:flex-row gap-4">
               <Link
@@ -156,7 +156,7 @@ export default function SocialMedia() {
         <div className="max-w-4xl mx-auto px-6 text-center">
           <h2 className="text-3xl md:text-4xl font-bold mb-4">Tired of Posting the Same Stock Photos?</h2>
           <p className="text-xl text-gray-300 mb-8">
-            Let's build a social presence that actually represents your business.
+            Let&apos;s build a social presence that actually represents your business.
           </p>
           <Link
             href="/contact"

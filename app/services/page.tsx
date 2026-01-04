@@ -116,13 +116,13 @@ export default function Services() {
           <div className="bg-white rounded-xl p-8 md:p-12 shadow-lg border-2 border-coastal/20">
             <h2 className="text-3xl font-bold mb-6 text-[#222326]">About Pricing</h2>
             <p className="text-lg text-gray-700 mb-4 leading-relaxed">
-              We don't list specific prices because honestly, it depends. Every business has different needs, different goals, and different budgets.
+              We don&apos;t list specific prices because honestly, it depends. Every business has different needs, different goals, and different budgets.
             </p>
             <p className="text-lg text-gray-700 mb-4 leading-relaxed">
-              <span className="font-semibold text-[#222326]">Most clients invest between $1,200-$6,000</span> depending on what they need. But your budget shouldn't disqualify you—we work with businesses at different stages.
+              <span className="font-semibold text-[#222326]">Most clients invest between $1,200-$6,000</span> depending on what they need. But your budget shouldn&apos;t disqualify you—we work with businesses at different stages.
             </p>
             <p className="text-lg text-gray-700 mb-8 leading-relaxed">
-              Book a free 30-minute call and we'll tell you straight up what's possible for your situation. If we can't help, we'll point you toward someone who can.
+              Book a free 30-minute call and we&apos;ll tell you straight up what&apos;s possible for your situation. If we can&apos;t help, we&apos;ll point you toward someone who can.
             </p>
             <Link
               href="/contact"

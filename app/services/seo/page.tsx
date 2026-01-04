@@ -14,7 +14,7 @@ export default function SEO() {
           <h1 className="text-5xl md:text-6xl font-bold text-[#222326] mb-4">SEO (Search Engine Optimization)</h1>
           <p className="text-2xl text-coastal mb-6 italic">Get Found by People Looking for What You Do</p>
           <p className="text-xl text-gray-700 leading-relaxed">
-            SEO isn't magic and anyone who tells you otherwise is selling something. It's a combination of technical fixes, content strategy, and patience. We do the work—you get the results.
+            SEO isn&apos;t magic and anyone who tells you otherwise is selling something. It&apos;s a combination of technical fixes, content strategy, and patience. We do the work—you get the results.
           </p>
         </div>
       </section>
@@ -32,7 +32,7 @@ export default function SEO() {
               <ul className="space-y-3">
                 <li className="flex items-start">
                   <span className="text-coastal mr-3 mt-1">→</span>
-                  <span className="text-gray-700">Site audits to find what's broken</span>
+                  <span className="text-gray-700">Site audits to find what&apos;s broken</span>
                 </li>
                 <li className="flex items-start">
                   <span className="text-coastal mr-3 mt-1">→</span>
@@ -117,10 +117,10 @@ export default function SEO() {
               SEO is different for everyone. Some businesses need a one-time cleanup. Others benefit from ongoing work to stay competitive.
             </p>
             <p className="text-lg text-gray-700 mb-4 leading-relaxed">
-              <span className="font-semibold text-[#222326]">Most clients invest between $1,200-$6,000</span> depending on their goals and timeline. Monthly retainers, one-time projects, or something in between—we'll find what works.
+              <span className="font-semibold text-[#222326]">Most clients invest between $1,200-$6,000</span> depending on their goals and timeline. Monthly retainers, one-time projects, or something in between—we&apos;ll find what works.
             </p>
             <p className="text-lg text-gray-700 mb-8 leading-relaxed">
-              Let's talk about where you are now and where you want to be. We'll tell you honestly what's possible and what it'll take to get there.
+              Let&apos;s talk about where you are now and where you want to be. We&apos;ll tell you honestly what&apos;s possible and what it&apos;ll take to get there.
             </p>
             <div className="flex flex-col sm:flex-row gap-4">
               <Link
@@ -145,7 +145,7 @@ export default function SEO() {
         <div className="max-w-4xl mx-auto px-6 text-center">
           <h2 className="text-3xl md:text-4xl font-bold mb-4">Want to Rank Higher?</h2>
           <p className="text-xl text-gray-300 mb-8">
-            Let's figure out what's holding you back and make a plan to fix it.
+            Let&apos;s figure out what&apos;s holding you back and make a plan to fix it.
           </p>
           <Link
             href="/contact"
