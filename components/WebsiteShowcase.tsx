@@ -132,6 +132,7 @@ export default function WebsiteShowcase({
 
       {/* Title and Description Below Tags */}
       <div className="mt-2 px-1">
+        <p className="text-xs uppercase tracking-wider text-gray-500 mb-1">{category}</p>
         <h3 className="text-base font-semibold text-[#222326] group-hover:text-[#5D878C] transition-colors">
           {title}
         </h3>
