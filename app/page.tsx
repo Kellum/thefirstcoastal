@@ -1,6 +1,11 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { getServices } from '@/lib/sanity';
+import HowWeWork from '@/components/HowWeWork';
+import WhoWeHelp from '@/components/WhoWeHelp';
+import WhyFirstCoastal from '@/components/WhyFirstCoastal';
+import LocalFocus from '@/components/LocalFocus';
+import CommonProblems from '@/components/CommonProblems';
 
 export default async function Home() {
   const services = await getServices();
@@ -26,7 +31,7 @@ export default async function Home() {
             We Help Businesses Make Better Choices Online
           </h1>
           <p className="text-xl md:text-2xl text-white/95 mb-8 font-light drop-shadow-lg">
-            Web design, development, SEO—the stuff that actually works
+            Website solutions, SEO, strategy—the stuff that actually works
           </p>
           <p className="text-lg text-white/90 mb-12 max-w-2xl mx-auto drop-shadow-lg">
             Most businesses waste time and money on digital solutions that don&apos;t solve their actual problems. We help you figure out what you really need, then build it. Based in Northeast Florida.
@@ -67,12 +72,12 @@ export default async function Home() {
               // Fallback content if no services in CMS yet
               <>
                 <div className="p-8 border border-gray-200 rounded-lg hover:border-coastal hover:shadow-lg transition-all duration-300">
-                  <h3 className="text-2xl font-bold mb-4 text-[#222326]">Web Design</h3>
-                  <p className="text-gray-600">Interfaces that make sense. No mystery meat navigation, no confusion—just clear, functional design that helps people get things done.</p>
+                  <h3 className="text-2xl font-bold mb-4 text-[#222326]">Website Solutions</h3>
+                  <p className="text-gray-600">Complete website design and development—from concept to launch. Whether you need a new site or improvements to what you have, we handle it all.</p>
                 </div>
                 <div className="p-8 border border-gray-200 rounded-lg hover:border-coastal hover:shadow-lg transition-all duration-300">
-                  <h3 className="text-2xl font-bold mb-4 text-[#222326]">Development</h3>
-                  <p className="text-gray-600">We build websites with modern frameworks that actually perform. Fast loading, accessible, maintainable code. The technical stuff, done right.</p>
+                  <h3 className="text-2xl font-bold mb-4 text-[#222326]">Social Media</h3>
+                  <p className="text-gray-600">Content creation, posting, and community management. No generic templates—just content that actually represents your brand.</p>
                 </div>
                 <div className="p-8 border border-gray-200 rounded-lg hover:border-coastal hover:shadow-lg transition-all duration-300">
                   <h3 className="text-2xl font-bold mb-4 text-[#222326]">SEO</h3>
@@ -87,6 +92,21 @@ export default async function Home() {
           </div>
         </div>
       </section>
+
+      {/* How We Work Section */}
+      <HowWeWork />
+
+      {/* Who We Help Section */}
+      <WhoWeHelp />
+
+      {/* Why First Coastal Section */}
+      <WhyFirstCoastal />
+
+      {/* Local Focus Section */}
+      <LocalFocus />
+
+      {/* Common Problems Section */}
+      <CommonProblems />
 
       {/* CTA Section */}
       <section className="py-24 bg-[#222326] text-white">
