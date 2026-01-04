@@ -3,6 +3,9 @@ import { getBlogPost } from '@/lib/sanity';
 import { urlFor } from '@/lib/sanity';
 import { notFound } from 'next/navigation';
 
+// Revalidate every 60 seconds - allows new blog posts to appear without redeployment
+export const revalidate = 60;
+
 export default async function BlogPost({
   params
 }: {
