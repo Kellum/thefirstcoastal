@@ -1,262 +1,106 @@
 # Development Checkpoint - January 5, 2026
 
-## Session: Instagram Integration for Authentic Social Media Display
+## Session: Instagram Integration Deployment Fix
 
-**Tags:** `#instagram` `#social-media` `#cms` `#sanity` `#ui` `#components` `#api` `#portfolio`
+**Tags:** `#instagram` `#deployment` `#bugfix` `#git` `#sanity` `#production`
 
 ---
 
 ## Session Goals
 
-1. Implement authentic Instagram post display for portfolio social media sections
-2. Replace generic social media templates with professional Instagram styling
-3. Add support for profile pictures, usernames, verified badges, and captions
-4. Create optional Instagram API integration for auto-fetching posts
-5. Provide manual workflow for easy content management without API complexity
+1. Debug why Instagram integration wasn't showing on production
+2. Fix Sanity Studio "Unknown fields" errors on live site
+3. Ensure all Instagram data displays correctly (profile pics, captions, links)
+4. Document deployment best practices to avoid similar issues
 
 ---
 
 ## Work Completed
 
-### 1. Enhanced Sanity Schema for Instagram Data
+### 1. Diagnosed Deployment Issue
 
 **Problem:**
-Social media posts displayed with generic placeholders - just client name initials in a circle, no profile pictures, no usernames, no captions. Posts didn't look authentic or professional.
+Instagram integration worked perfectly locally but failed on production:
+- Sanity Studio showed "Unknown fields" errors for `instagramHandle` and `instagramProfilePicture`
+- Instagram data (profile pics, captions, post URLs) wasn't displaying on work pages
+- User had added data in local Sanity Studio, but it wasn't showing on production
+
+**Investigation:**
+- Checked Railway deployment status - appeared successful
+- Examined production HTML - no Instagram fields present
+- Checked git history for `portfolioItem.ts` - **no commit for Instagram changes!**
+- Ran `git status` - discovered all Instagram files were uncommitted
+
+**Root Cause:**
+The Instagram integration code was **never committed to git**. During the previous session:
+1. ✅ Created schema changes, components, and API service
+2. ✅ Tested successfully on local server
+3. ✅ Created `INSTAGRAM_SETUP.md` and `checkpoint.md`
+4. ✅ Committed checkpoint files (`597f372`)
+5. ❌ **Forgot to commit actual code changes**
+6. ❌ Railway deployed without Instagram integration
+7. ❌ Production missing all new features
+
+### 2. Fixed GROQ Query for Nested Fields
+
+**Problem:**
+Even if schema was deployed, the Sanity query wasn't fetching nested fields from `socialMediaPosts`.
 
 **Solution:**
-Added Instagram-specific fields to portfolioItem schema:
+Enhanced GROQ query to explicitly request nested fields:
 
 ```typescript
-// New Instagram Profile Fields
-defineField({
-  name: 'instagramHandle',
-  title: 'Instagram Username',
-  type: 'string',
-  description: 'Instagram username (without @)',
-  validation: (Rule) => Rule.custom((value) => {
-    if (value?.startsWith('@')) return 'Do not include @ symbol';
-    return true;
-  })
-}),
+// Before (incomplete)
+socialMediaPosts,
 
-defineField({
-  name: 'instagramProfilePicture',
-  title: 'Instagram Profile Picture',
-  type: 'image',
-  description: 'Profile picture (fetched from API or manually uploaded)'
-}),
-
-defineField({
-  name: 'isInstagramVerified',
-  title: 'Instagram Verified Account',
-  type: 'boolean',
-  description: 'Blue checkmark badge',
-  initialValue: false
-})
-```
-
-**Enhanced Social Media Posts:**
-```typescript
-// Added to existing socialMediaPosts array fields
-{
-  name: 'caption',
-  type: 'text',
-  title: 'Post Caption',
-  description: 'The caption/text for this post',
-  rows: 3
+// After (complete)
+socialMediaPosts[]{
+  ...,          // Spread all base image fields
+  caption,      // Explicitly request caption
+  postUrl,      // Explicitly request post URL
+  platform,     // Explicitly request platform
+  alt           // Explicitly request alt text
 },
-{
-  name: 'postUrl',
-  type: 'url',
-  title: 'Link to Original Post',
-  description: 'URL to the actual Instagram post'
-}
 ```
 
 **File Updated:**
-- `sanity/schemas/portfolioItem.ts` - Added 4 new fields for Instagram data
+- `lib/sanity.ts` - Enhanced query projection
 
-### 2. Created Professional InstagramPost Component
+**Commit:** `de14c7e` - "Fix: Expand socialMediaPosts query to fetch caption and postUrl fields"
 
-**Problem:**
-No component existed for displaying Instagram-style posts. Old approach used generic divs with minimal styling.
+### 3. Committed Missing Instagram Integration
 
-**Solution:**
-Built complete Instagram post component with authentic styling:
+**Files Staged and Committed:**
+1. `sanity/schemas/portfolioItem.ts` - Instagram schema fields
+2. `components/InstagramPost.tsx` - Instagram post component
+3. `lib/instagram.ts` - Instagram API service
+4. `app/work/[slug]/page.tsx` - Component integration
 
-**Component Features:**
-- **Authentic Header:** Profile picture (circular), username, verified badge, three-dot menu
-- **Post Image:** Full square aspect ratio with object-cover
-- **Action Buttons:** Like, comment, share, bookmark (visual only, authentic icons)
-- **Caption Display:** Username + caption with "more/less" toggle for long captions
-- **View on Instagram:** Link to original post (if provided)
-- **Fallback Support:** Shows client initial if no profile pic, uses client name if no username
+**Commit:** `d69471e` - "Add Instagram integration: schema fields, InstagramPost component, API service"
 
-**Key Implementation Details:**
+**Commit Message:**
+```
+Add Instagram integration: schema fields, InstagramPost component, API service
 
-```tsx
-// Caption truncation logic
-const truncatedCaption = caption && caption.length > 125
-  ? caption.substring(0, 125) + '...'
-  : caption;
-
-// Toggle for long captions
-{caption.length > 125 && (
-  <button onClick={() => setShowFullCaption(!showFullCaption)}>
-    {showFullCaption ? 'less' : 'more'}
-  </button>
-)}
-
-// Verified badge SVG
-{isVerified && (
-  <svg className="w-3.5 h-3.5 text-blue-500" viewBox="0 0 24 24">
-    <path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10..." />
-  </svg>
-)}
+- Add Instagram profile fields to Sanity schema (handle, profile pic, verified)
+- Add caption and postUrl fields to socialMediaPosts
+- Create InstagramPost component with authentic styling
+- Create Instagram API service library
+- Update work detail page to use InstagramPost component
+- Add profile picture and caption support
 ```
 
-**File Created:**
-- `components/InstagramPost.tsx` - Complete Instagram post component (180+ lines)
+### 4. Verified Deployment
 
-### 3. Instagram API Service Library
+**Actions Taken:**
+1. Pushed commits to trigger Railway deployment
+2. Waited for Railway build and deployment (~3 minutes)
+3. Verified Instagram fields appear in production Sanity Studio
+4. Confirmed "Unknown fields" errors resolved
+5. Checked work pages show Instagram data correctly
 
-**Problem:**
-No infrastructure existed for fetching Instagram data from their API if users wanted auto-sync.
-
-**Solution:**
-Created comprehensive Instagram API service with Instagram Basic Display API support:
-
-**Service Functions:**
-- `getInstagramProfile()` - Fetch profile info (username, account type, media count)
-- `getInstagramMedia()` - Fetch user's recent posts (up to limit)
-- `getInstagramMediaById()` - Fetch specific post by ID
-- `validateInstagramToken()` - Check if access token is valid
-- `exchangeForLongLivedToken()` - Convert short-lived to 60-day token
-- `refreshLongLivedToken()` - Extend token expiration
-
-**API Integration:**
-```typescript
-export async function getInstagramProfile(accessToken: string) {
-  const fields = 'id,username,account_type,media_count';
-  const url = `https://graph.instagram.com/me?fields=${fields}&access_token=${accessToken}`;
-
-  const response = await fetch(url, {
-    next: { revalidate: 3600 } // Cache for 1 hour
-  });
-
-  return await response.json();
-}
-```
-
-**File Created:**
-- `lib/instagram.ts` - Full Instagram API service (190+ lines)
-
-### 4. Updated Work Detail Pages with Instagram Components
-
-**Problem:**
-Work detail pages used old generic social media display code inline with divs.
-
-**Solution:**
-Refactored social media section to use new InstagramPost component:
-
-**Before:**
-```tsx
-<div className="bg-white rounded-lg shadow-lg overflow-hidden">
-  <div className="p-4 border-b">
-    <div className="w-10 h-10 rounded-full bg-gradient-to-br">
-      {item.client.charAt(0).toUpperCase()}
-    </div>
-    <p className="font-semibold">{item.client}</p>
-  </div>
-  <img src={post.url} />
-  {/* Action icons */}
-</div>
-```
-
-**After:**
-```tsx
-<InstagramPost
-  imageUrl={post.url}
-  alt={post.alt}
-  profilePictureUrl={instagramProfilePicUrl}
-  username={item.instagramHandle}
-  displayName={item.client}
-  isVerified={item.isInstagramVerified}
-  caption={post.caption}
-  postUrl={post.postUrl}
-/>
-```
-
-**Sanity Query Updates:**
-```typescript
-// Added to getPortfolioItem query
-instagramHandle,
-instagramProfilePicture,
-isInstagramVerified,
-
-// Enhanced socialMediaPosts processing
-const socialMediaPostUrls = item.socialMediaPosts?.map((post: any) => ({
-  url: urlFor(post).width(800).height(800).url(),
-  alt: post.alt || 'Social media post',
-  platform: post.platform || 'Social Media',
-  caption: post.caption || '',  // NEW
-  postUrl: post.postUrl || ''   // NEW
-}));
-
-// Generate Instagram profile pic URL
-const instagramProfilePicUrl = item.instagramProfilePicture
-  ? urlFor(item.instagramProfilePicture).width(200).height(200).url()
-  : undefined;
-```
-
-**Files Updated:**
-- `lib/sanity.ts` - Added Instagram fields to query (3 new fields)
-- `app/work/[slug]/page.tsx` - Integrated InstagramPost component, enhanced data processing
-
-### 5. Comprehensive Documentation
-
-**Problem:**
-No documentation existed for Instagram setup workflow or API integration.
-
-**Solution:**
-Created detailed setup guide covering both manual and API approaches:
-
-**Documentation Sections:**
-1. **Overview** - What the integration provides
-2. **Current Setup (Manual Mode)** - Step-by-step for non-API usage
-3. **Advanced Setup (Instagram API)** - Complete API integration guide
-4. **Manual vs API Comparison** - Table comparing both approaches
-5. **Recommendations** - When to use each approach
-6. **Troubleshooting** - Common issues and solutions
-
-**Quick Start Guide (Manual):**
-```markdown
-1. Go to Sanity Studio and edit portfolio item
-2. Select "Social Media" service
-3. Fill in Instagram fields:
-   - Username: clientusername
-   - Upload profile picture
-   - Check verified if applicable
-4. Add Social Media Posts:
-   - Upload post image
-   - Enter caption
-   - Add Instagram URL
-5. Save and publish!
-```
-
-**API Setup Steps:**
-- Create Facebook Developer App
-- Add Instagram Basic Display product
-- Generate access tokens
-- Convert to long-lived tokens (60 days)
-- Store securely in environment variables
-- Use refresh endpoint to extend tokens
-
-**Files Created:**
-- `INSTAGRAM_SETUP.md` - Complete setup documentation (180+ lines)
-
-**Files Updated:**
-- `.env.local` - Added Instagram API env var placeholders (commented)
+**Result:**
+✅ All Instagram integration features now live on production
 
 ---
 
@@ -264,16 +108,10 @@ Created detailed setup guide covering both manual and API approaches:
 
 | Decision | Reasoning |
 |----------|-----------|
-| Manual-first approach | Most users want control over showcased content; API adds complexity |
-| Store profile data in Sanity | Gives full control, no API dependencies, works offline |
-| Optional Instagram API | Available for users who want auto-sync but not required |
-| Caption field per post | Captions make posts look authentic and provide context |
-| Verified badge as boolean | Simple toggle, no API needed, easy to set in CMS |
-| Profile pic as Sanity image | Can upload manually or save from Instagram; always available |
-| Link to original posts | Adds credibility, users can verify authenticity |
-| "More/less" caption toggle | Keeps cards clean while allowing full caption viewing |
-| 125-character caption truncation | Matches Instagram's mobile truncation pattern |
-| Blue verified badge | Matches Instagram's actual verified badge design |
+| Commit code before checkpoints | Checkpoints should document already-deployed code, not work-in-progress |
+| Use detailed commit messages | Multi-line commit message clearly explains what changed and why |
+| Expand GROQ query explicitly | Sanity requires explicit field projection for nested custom fields |
+| Document deployment workflow | Prevent similar issues by establishing clear commit/deploy process |
 
 ---
 
@@ -281,275 +119,233 @@ Created detailed setup guide covering both manual and API approaches:
 
 | Challenge | Solution |
 |-----------|----------|
-| Generic social posts looked unprofessional | Built authentic Instagram component with real styling |
-| No way to add profile pictures | Added instagramProfilePicture field to Sanity schema |
-| Posts missing context (captions) | Added caption field to socialMediaPosts array |
-| No verified badge support | Added isInstagramVerified boolean field |
-| Long captions cluttering cards | Implemented 125-char truncation with more/less toggle |
-| Users might want API auto-fetch | Created full Instagram API service (optional) |
-| No documentation for setup | Wrote comprehensive INSTAGRAM_SETUP.md guide |
-| Build errors during development | Cleaned .next cache and restarted dev server |
+| Instagram integration not on production | Discovered files never committed; committed and pushed all changes |
+| "Unknown fields" error in Sanity Studio | Schema changes weren't deployed; fixed by committing schema file |
+| Nested fields not fetching from GROQ | Enhanced query to explicitly request caption/postUrl fields |
+| Confusion about deployment state | Checked `git log` and `git status` to understand what was/wasn't deployed |
+| Preventing future similar issues | Documented deployment best practices and workflow |
 
 ---
 
 ## Current State
 
 ### What's Working
-✅ Instagram-specific fields added to Sanity schema
-✅ InstagramPost component with authentic styling
-✅ Profile pictures display in circular format
-✅ Usernames show with @ prefix (optional)
-✅ Blue verified badges for verified accounts
-✅ Captions truncate with more/less toggle
-✅ Links to original Instagram posts
-✅ Fallback to client name/initial if Instagram data missing
-✅ Instagram API service ready for optional use
-✅ Comprehensive setup documentation
-✅ Production build successful
-✅ Dev server running (minor hot-reload warnings, functionally working)
+✅ Instagram integration fully deployed to production
+✅ Sanity schema includes all Instagram fields
+✅ InstagramPost component renders authentically
+✅ GROQ query fetches nested caption and postUrl fields
+✅ Profile pictures display correctly
+✅ Captions show with truncation and more/less toggle
+✅ "View on Instagram" links work
+✅ Verified badges appear for verified accounts
+✅ No more "Unknown fields" errors in Sanity Studio
 
-### Files Created (This Session)
+### Deployment History
+1. `597f372` - Checkpoint and documentation (missing actual code!)
+2. `de14c7e` - GROQ query fix for nested fields
+3. `d69471e` - Full Instagram integration (schema, components, API)
 
-**New Components:**
-- `components/InstagramPost.tsx` - Authentic Instagram post component
+### Files Deployed (This Session)
 
-**New Libraries:**
-- `lib/instagram.ts` - Instagram API service
+**Schema Changes:**
+- `sanity/schemas/portfolioItem.ts` - Instagram profile fields + post enhancements
 
-**New Documentation:**
-- `INSTAGRAM_SETUP.md` - Complete setup guide
+**Data Layer:**
+- `lib/sanity.ts` - Enhanced GROQ query
+- `lib/instagram.ts` - Instagram API service (new file)
 
-### Files Modified (This Session)
+**Components:**
+- `components/InstagramPost.tsx` - Authentic Instagram post component (new file)
 
-**Schema Updates:**
-- `sanity/schemas/portfolioItem.ts` - Added 4 Instagram fields, enhanced socialMediaPosts
+**Pages:**
+- `app/work/[slug]/page.tsx` - Instagram component integration
 
-**Data Fetching:**
-- `lib/sanity.ts` - Added Instagram fields to queries
+**Documentation:**
+- `INSTAGRAM_SETUP.md` - Setup guide (already committed in previous session)
 
-**UI Integration:**
-- `app/work/[slug]/page.tsx` - Integrated InstagramPost component, enhanced data processing
+---
 
-**Environment:**
-- `.env.local` - Added Instagram API variable placeholders
+## Lessons Learned
 
-### Code Statistics
-- **Lines Added:** ~600+
-- **New Components:** 1
-- **New Libraries:** 1
-- **Schema Fields Added:** 4
-- **Files Modified:** 5
-- **Files Created:** 3
-- **Documentation:** 180+ lines
+### Git & Deployment Workflow
+- **Always check `git status` before checkpoints** - Ensure all code is committed
+- **Commit code first, document second** - Checkpoints should reflect deployed state
+- **Use `git diff --stat` before deploying** - See what's actually being deployed
+- **Test production after every deploy** - Don't assume local = production
+
+### Sanity GROQ Queries
+- **Nested fields need explicit projection** - Can't rely on implicit field fetching
+- **Test queries in Sanity Vision** - Verify fields are actually returned
+- **Image objects need expansion** - Use `field[]{...}` syntax for nested data
+
+### Debugging Production Issues
+- **Check git history** - `git log --oneline -- path/to/file` shows file changes
+- **Verify deployed code** - Use curl or browser to check production bundle
+- **Don't assume deployment = success** - Always verify changes appear
+
+### Communication & Documentation
+- **Document as you go** - But don't substitute documentation for deployment
+- **Clear commit messages matter** - Multi-line messages explain context
+- **Keep checkpoints accurate** - Update if deployment state changes
 
 ---
 
 ## Next Steps
 
 ### Immediate Actions
-1. **Test in Sanity Studio**
-   - Open Sanity Studio (/studio)
-   - Edit a portfolio item with social media service
-   - Add Instagram username, profile picture, verified status
-   - Add captions to existing social media posts
-   - Verify fields appear correctly in CMS
-
-2. **Verify Frontend Display**
-   - Navigate to work detail page for updated project
-   - Confirm Instagram posts render with authentic styling
-   - Check profile picture displays correctly
-   - Verify caption truncation and toggle works
-   - Test "View on Instagram" link
-
-3. **Deploy to Production**
-   - Commit Instagram integration changes
-   - Push to Railway
-   - Test on live site
-   - Verify Sanity data syncs correctly
+1. ✅ Verify Instagram integration on production (DONE)
+2. ✅ Confirm Sanity Studio shows fields correctly (DONE)
+3. ✅ Test all Instagram features on live site (DONE)
 
 ### Content Population
-4. **Update Existing Projects**
-   - Add Instagram data to all projects with social media service
-   - Upload profile pictures for each client
-   - Add post captions for authenticity
+4. **Add Instagram data to existing projects**
+   - Upload profile pictures for all clients with social media
+   - Add captions to existing social media posts
    - Mark verified accounts appropriately
+   - Add Instagram post URLs for attribution
 
-5. **Gather Instagram Assets**
+5. **Gather Assets**
    - Download profile pictures from client Instagram accounts
-   - Copy post captions from actual Instagram posts
-   - Note verified status for each account
-   - Collect Instagram post URLs for attribution
+   - Copy captions from actual posts
+   - Document verified status for each account
 
-### Optional API Integration
-6. **Instagram API Setup** (If Desired)
-   - Create Facebook Developer account
-   - Set up app with Instagram Basic Display
-   - Generate access tokens for client accounts
-   - Store tokens securely in environment variables
-   - Implement token refresh cron job (before 60-day expiration)
+### Process Improvements
+6. **Create Deployment Checklist**
+   - Pre-deployment: Check git status, run tests, verify changes
+   - During: Monitor Railway dashboard
+   - Post-deployment: Test on production, verify Sanity Studio
 
-7. **API Testing** (If Implemented)
-   - Test profile fetching with API
-   - Verify media fetching works
-   - Confirm token validation
-   - Test token refresh functionality
+7. **Establish Git Workflow**
+   - Always commit code before checkpoints
+   - Use `git status` before considering work "done"
+   - Push immediately after committing
+   - Verify Railway picks up changes
 
-### Future Enhancements
-- Add engagement metrics (likes, comments) if using API
-- Implement carousel support for multi-image posts
-- Add video post support
-- Create Instagram feed page showing all posts across clients
-- Add "Follow on Instagram" button to work pages
-- Implement Instagram Stories display (if API supports)
+### Optional Enhancements
+- Set up git pre-commit hooks to warn about uncommitted changes
+- Create deployment checklist file in repo
+- Add git aliases for common operations (`git check`, `git deploy`)
 
 ---
 
-## Lessons Learned
+## Deployment Best Practices (Documented for Future)
 
-### Instagram Integration
-- **Manual-first is best** - Most portfolio sites benefit from curated content over auto-sync
-- **Authentic styling matters** - Users immediately recognize real vs fake Instagram posts
-- **Profile pictures are critical** - Generic initials look unprofessional compared to real photos
-- **Captions add context** - Even short captions make posts feel more authentic
-- **Verified badges add credibility** - Blue checkmarks signal authority and authenticity
+### Pre-Deployment Checklist
+```bash
+# 1. Check what's uncommitted
+git status
+git diff --stat
 
-### Component Design
-- **Composition over complexity** - Single InstagramPost component is reusable and maintainable
-- **Props for flexibility** - Component works with or without Instagram data (fallbacks)
-- **Client-side interactivity** - 'use client' needed for caption toggle state
-- **Semantic HTML** - Proper structure helps with accessibility and SEO
+# 2. Review changes
+git diff
 
-### API Integration Strategy
-- **Make APIs optional** - Don't force users into API complexity
-- **Provide fallbacks** - Manual workflow should be primary, API is enhancement
-- **Document thoroughly** - API setup is complex, needs step-by-step guide
-- **Token management matters** - Long-lived tokens need refresh strategy
-- **Cache API responses** - Next.js `revalidate` prevents hitting rate limits
+# 3. Stage all relevant changes
+git add [files]
 
-### Schema Design
-- **Flexible field structure** - Fields work with manual upload or API fetch
-- **Validation at schema level** - Prevent common mistakes (@ symbol in username)
-- **Clear descriptions** - Help CMS users understand what each field does
-- **Sensible defaults** - Boolean fields default to false, optional fields allow nulls
+# 4. Commit with clear message
+git commit -m "Clear description of changes"
 
-### Dev Environment
-- **Next.js cache issues** - `rm -rf .next` fixes many development errors
-- **Hot reload warnings are normal** - React context errors in dev don't affect production
-- **Build before deploy** - Production build is definitive test of code quality
+# 5. Push to trigger deployment
+git push
+
+# 6. Monitor Railway dashboard
+# Watch for build completion
+
+# 7. Test on production
+# Verify changes appear correctly
+```
+
+### Post-Deployment Verification
+- [ ] Check Railway deployment succeeded
+- [ ] Hard refresh Sanity Studio if schema changed
+- [ ] Test features on live site
+- [ ] Verify ISR regenerates pages (wait 60 seconds)
+- [ ] Check browser console for errors
+
+### When Creating Checkpoints
+1. Commit and push all code FIRST
+2. Verify deployment succeeded
+3. Test on production
+4. THEN create checkpoint documenting what was deployed
 
 ---
 
 ## Technical Notes
 
-### Instagram Post Component Props
+### Git Commands Used
+
+```bash
+# Check uncommitted changes
+git status
+
+# View file history
+git log --oneline -- sanity/schemas/portfolioItem.ts
+
+# Check specific file changes
+git diff sanity/schemas/portfolioItem.ts
+
+# Stage files (escaped brackets for shell)
+git add 'app/work/[slug]/page.tsx'
+
+# Commit with multi-line message
+git commit -m "Title
+
+- Bullet point 1
+- Bullet point 2
+- Bullet point 3"
+
+# Push to trigger deployment
+git push
+```
+
+### GROQ Query Syntax for Nested Fields
 
 ```typescript
-interface InstagramPostProps {
-  imageUrl: string;              // Required: Post image URL
-  alt?: string;                  // Image alt text
-  profilePictureUrl?: string;    // Profile picture URL from Sanity
-  username?: string;             // Instagram handle without @
-  displayName?: string;          // Client name fallback
-  isVerified?: boolean;          // Show verified badge
-  caption?: string;              // Post caption text
-  postUrl?: string;              // Link to original Instagram post
+// Fetch array with nested fields
+socialMediaPosts[]{
+  ...,          // Spread operator gets all base fields
+  caption,      // Explicitly request custom field
+  postUrl,      // Explicitly request custom field
+  platform,     // Standard field (could be implicit, but explicit is clearer)
+  alt           // Standard field
 }
+
+// Without explicit projection, only base image fields returned
+// Custom fields (caption, postUrl) would be undefined
 ```
 
-### Instagram API Endpoints
+### Railway Deployment Flow
 
-```typescript
-// User Profile
-GET https://graph.instagram.com/me
-  ?fields=id,username,account_type,media_count
-  &access_token={token}
-
-// User Media
-GET https://graph.instagram.com/me/media
-  ?fields=id,caption,media_type,media_url,permalink,timestamp,username
-  &limit=12
-  &access_token={token}
-
-// Exchange Token
-GET https://graph.instagram.com/access_token
-  ?grant_type=ig_exchange_token
-  &client_secret={secret}
-  &access_token={short_token}
-
-// Refresh Token
-GET https://graph.instagram.com/refresh_access_token
-  ?grant_type=ig_refresh_token
-  &access_token={current_token}
-```
-
-### Sanity Image URL Generation
-
-```typescript
-// Profile picture (small, circular)
-const profilePicUrl = urlFor(item.instagramProfilePicture)
-  .width(200)
-  .height(200)
-  .url();
-
-// Post image (square, Instagram standard)
-const postUrl = urlFor(post)
-  .width(800)
-  .height(800)
-  .url();
-```
-
-### Caption Truncation Logic
-
-```typescript
-// Truncate at 125 characters (Instagram mobile standard)
-const CAPTION_LENGTH = 125;
-
-const truncatedCaption = caption && caption.length > CAPTION_LENGTH
-  ? caption.substring(0, CAPTION_LENGTH) + '...'
-  : caption;
-
-// Show toggle only if caption exceeds limit
-{caption.length > CAPTION_LENGTH && (
-  <button onClick={() => setShowFullCaption(!showFullCaption)}>
-    {showFullCaption ? 'less' : 'more'}
-  </button>
-)}
-```
-
-### Verified Badge SVG
-
-```tsx
-// Blue checkmark matching Instagram's design
-<svg className="w-3.5 h-3.5 text-blue-500" viewBox="0 0 24 24" fill="currentColor">
-  <path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10 10-4.5 10-10S17.5 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" />
-</svg>
-```
+1. Developer pushes to GitHub
+2. Railway webhook detects push
+3. Railway clones latest commit
+4. Railway runs `npm install`
+5. Railway runs `npm run build`
+6. Railway restarts app with new build
+7. Next.js ISR regenerates pages on demand (60 second revalidation)
 
 ---
 
 ## Previous Session Summary
 
-**Date:** January 4, 2026
-**Focus:** Blog & Portfolio ISR, Image Handling, UI Polish
+**Date:** January 5, 2026 (earlier today)
+**Focus:** Instagram Integration Development
 
 **Key Achievements:**
-- Implemented ISR (60-second revalidation) for blog and portfolio
-- Added `generateStaticParams` to prevent 404s on new content
-- Fixed blog image cropping with `object-contain`
-- Made browser chrome ultra-compact
-- Added actual domain URLs to work cards
-- Reorganized work detail page layout (mockups → description → button → tabs)
-- Made "View Website" button large and prominent
-- Integrated PortableTextRenderer for blog content
+- Designed Instagram integration architecture
+- Added Instagram fields to Sanity schema
+- Created InstagramPost component with authentic styling
+- Built Instagram API service library
+- Integrated components into work pages
+- Created comprehensive documentation
 
-**Result:** Dynamic content updates without redeployment, optimized UX flow
+**Issue:** Forgot to commit actual code changes, only committed documentation
 
 ---
 
-**Session Date:** January 5, 2026
-**Session Duration:** ~3 hours
+**Session Date:** January 5, 2026 (afternoon)
+**Session Duration:** ~1 hour
 **Status:** ✅ **COMPLETE**
-**Instagram Integration:** Fully implemented
-**Build Status:** Successful
-**Dev Server:** Running (functional with minor hot-reload warnings)
-**Next Review:** Test in Sanity Studio, populate content, deploy to production
+**Deployment:** Successful - All Instagram features live
+**Key Learning:** Always commit code before checkpoints
+**Next Review:** Add Instagram data to existing projects, create deployment checklist
