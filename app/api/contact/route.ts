@@ -197,10 +197,18 @@ Sent from thefirstcoastal.com contact form
       { message: 'Email sent successfully' },
       { status: 200 }
     );
-  } catch (error) {
+  } catch (error: any) {
     console.error('Error sending email:', error);
+    console.error('Error details:', {
+      message: error.message,
+      response: error.response?.body,
+      statusCode: error.statusCode,
+    });
     return NextResponse.json(
-      { error: 'Failed to send email. Please try again later.' },
+      {
+        error: 'Failed to send email. Please try again later.',
+        details: process.env.NODE_ENV === 'development' ? error.message : undefined
+      },
       { status: 500 }
     );
   }
