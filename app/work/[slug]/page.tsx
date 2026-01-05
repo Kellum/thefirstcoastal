@@ -107,14 +107,61 @@ export default async function PortfolioItemPage({
 
       {/* Header Section */}
       <article className="max-w-6xl mx-auto px-6 py-12">
+        {/* Basic Header - Logo, Client, Title */}
         <ProjectHeader
           clientLogo={clientLogoUrl}
           clientName={item.client}
           title={item.title || 'Untitled Project'}
-          description={item.description}
-          completedDate={item.completedDate}
-          projectUrl={item.projectUrl}
         />
+
+        {/* Desktop/Mobile Mockups - First visual */}
+        <div className="mb-12 max-w-5xl mx-auto">
+          <WebsiteViewToggle
+            imageUrls={imageUrls}
+            title={item.title}
+            projectUrl={item.projectUrl}
+            desktopScreenshot={desktopScreenshotUrl}
+            mobileScreenshot={mobileScreenshotUrl}
+          />
+        </div>
+
+        {/* Description */}
+        <div className="max-w-4xl mx-auto text-center mb-8">
+          <p className="text-lg text-gray-700 leading-relaxed mb-8">
+            {item.description && item.description.length > 400
+              ? `${item.description.substring(0, 400)}...`
+              : item.description}
+          </p>
+
+          {/* View Website Button - Prominent */}
+          {item.projectUrl && (
+            <div className="mb-6">
+              <a
+                href={item.projectUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 px-8 py-4 bg-[#5D878C] text-white rounded-lg hover:bg-[#4A6C70] transition-all duration-200 font-medium shadow-lg hover:shadow-xl hover:scale-105 text-lg"
+              >
+                View Live Website
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                </svg>
+              </a>
+            </div>
+          )}
+
+          {/* Completion Date */}
+          {item.completedDate && (
+            <div className="text-sm text-gray-600">
+              <time dateTime={item.completedDate}>
+                Completed {new Date(item.completedDate).toLocaleDateString('en-US', {
+                  month: 'long',
+                  year: 'numeric'
+                })}
+              </time>
+            </div>
+          )}
+        </div>
 
         {/* Service Tabs - Only show if multiple services */}
         <ServiceTabs services={services} />
@@ -132,17 +179,6 @@ export default async function PortfolioItemPage({
                   <PortableTextRenderer value={item.websiteDescription} />
                 </div>
               )}
-
-              {/* Desktop/Mobile Mockups - Moved up below description */}
-              <div className="mb-12">
-                <WebsiteViewToggle
-                  imageUrls={imageUrls}
-                  title={item.title}
-                  projectUrl={item.projectUrl}
-                  desktopScreenshot={desktopScreenshotUrl}
-                  mobileScreenshot={mobileScreenshotUrl}
-                />
-              </div>
 
               {/* Project Type & Technical Details */}
               {item.websiteProjectType && (
