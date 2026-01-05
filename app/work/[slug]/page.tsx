@@ -133,6 +133,17 @@ export default async function PortfolioItemPage({
                 </div>
               )}
 
+              {/* Desktop/Mobile Mockups - Moved up below description */}
+              <div className="mb-12">
+                <WebsiteViewToggle
+                  imageUrls={imageUrls}
+                  title={item.title}
+                  projectUrl={item.projectUrl}
+                  desktopScreenshot={desktopScreenshotUrl}
+                  mobileScreenshot={mobileScreenshotUrl}
+                />
+              </div>
+
               {/* Project Type & Technical Details */}
               {item.websiteProjectType && (
                 <div className="mb-8 bg-gradient-to-br from-[#F0F4F5] to-white rounded-xl p-6">
@@ -230,14 +241,6 @@ export default async function PortfolioItemPage({
                   )}
                 </div>
               )}
-
-              <WebsiteViewToggle
-                imageUrls={imageUrls}
-                title={item.title}
-                projectUrl={item.projectUrl}
-                desktopScreenshot={desktopScreenshotUrl}
-                mobileScreenshot={mobileScreenshotUrl}
-              />
 
               {/* Key Features */}
               {item.websiteFeatures && item.websiteFeatures.length > 0 && (
