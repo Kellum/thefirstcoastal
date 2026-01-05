@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { getPortfolioItem } from '@/lib/sanity';
+import { getPortfolioItem, getPortfolioItems } from '@/lib/sanity';
 import { urlFor } from '@/lib/sanity';
 import { notFound } from 'next/navigation';
 import WebsiteViewToggle from '@/components/WebsiteViewToggle';
@@ -11,6 +11,17 @@ import { getTagColor } from '@/lib/tagColors';
 
 // Revalidate every 60 seconds - allows new portfolio items to appear without redeployment
 export const revalidate = 60;
+
+// Enable dynamic params for new portfolio items
+export const dynamicParams = true;
+
+// Generate static params for existing portfolio items
+export async function generateStaticParams() {
+  const items = await getPortfolioItems();
+  return items.map((item: any) => ({
+    slug: item.slug,
+  }));
+}
 
 export default async function PortfolioItemPage({
   params

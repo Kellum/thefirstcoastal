@@ -1,11 +1,22 @@
 import Link from 'next/link';
-import { getBlogPost } from '@/lib/sanity';
+import { getBlogPost, getBlogPosts } from '@/lib/sanity';
 import { urlFor } from '@/lib/sanity';
 import { notFound } from 'next/navigation';
 import PortableTextRenderer from '@/components/PortableTextRenderer';
 
 // Revalidate every 60 seconds - allows new blog posts to appear without redeployment
 export const revalidate = 60;
+
+// Enable dynamic params for new blog posts
+export const dynamicParams = true;
+
+// Generate static params for existing blog posts
+export async function generateStaticParams() {
+  const posts = await getBlogPosts();
+  return posts.map((post: any) => ({
+    slug: post.slug,
+  }));
+}
 
 export default async function BlogPost({
   params
