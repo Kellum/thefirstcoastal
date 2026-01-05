@@ -7,9 +7,9 @@ export default function WhoWeHelp() {
   ];
 
   return (
-    <section className="py-24 bg-gray-50">
+    <section className="py-16 lg:py-20 xl:py-24 bg-gray-50">
       <div className="max-w-4xl mx-auto px-6">
-        <h2 className="text-4xl md:text-5xl font-bold text-center mb-8 text-[#222326]">
+        <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-center mb-8 text-[#222326]">
           Local Businesses Doing Real Work
         </h2>
         <p className="text-lg text-gray-700 leading-relaxed mb-8 text-center">

@@ -27,13 +27,13 @@ export default async function Home() {
 
         {/* Content */}
         <div className="relative z-10 max-w-4xl mx-auto px-6 text-center">
-          <h1 className="text-5xl md:text-7xl font-bold text-white mb-6 drop-shadow-2xl">
+          <h1 className="text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold text-white mb-6 drop-shadow-2xl">
             We Help Businesses Make Better Choices Online
           </h1>
-          <p className="text-xl md:text-2xl text-white/95 mb-8 font-light drop-shadow-lg">
+          <p className="text-lg md:text-xl lg:text-2xl text-white/95 mb-8 font-light drop-shadow-lg">
             Website solutions, SEO, strategy—the stuff that actually works
           </p>
-          <p className="text-lg text-white/90 mb-12 max-w-2xl mx-auto drop-shadow-lg">
+          <p className="text-base md:text-lg text-white/90 mb-12 max-w-2xl mx-auto drop-shadow-lg">
             Most businesses waste time and money on digital solutions that don&apos;t solve their actual problems. We help you figure out what you really need, then build it. Based in Northeast Florida.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
@@ -54,10 +54,10 @@ export default async function Home() {
       </section>
 
       {/* Services Section */}
-      <section className="py-24 bg-white">
+      <section className="py-16 lg:py-20 xl:py-24 bg-white">
         <div className="max-w-7xl mx-auto px-6">
-          <h2 className="text-4xl md:text-5xl font-bold text-center mb-16">What We Do</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-center mb-12 lg:mb-16">What We Do</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
             {services && services.length > 0 ? (
               services.map((service: any) => (
                 <div
@@ -109,9 +109,9 @@ export default async function Home() {
       <CommonProblems />
 
       {/* CTA Section */}
-      <section className="py-24 bg-[#222326] text-white">
+      <section className="py-16 lg:py-20 xl:py-24 bg-[#222326] text-white">
         <div className="max-w-4xl mx-auto px-6 text-center">
-          <h2 className="text-4xl md:text-5xl font-bold mb-6">Have a Problem to Solve?</h2>
+          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-6">Have a Problem to Solve?</h2>
           <p className="text-xl text-gray-300 mb-8">
             Let&apos;s figure out if we can help, and how.
           </p>
