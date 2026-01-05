@@ -7,6 +7,7 @@ import ProjectHeader from '@/components/ProjectHeader';
 import ServiceTabs from '@/components/ServiceTabs';
 import SEOSection from '@/components/SEOSection';
 import PortableTextRenderer from '@/components/PortableTextRenderer';
+import InstagramPost from '@/components/InstagramPost';
 import { getTagColor } from '@/lib/tagColors';
 
 // Revalidate every 60 seconds - allows new portfolio items to appear without redeployment
@@ -66,8 +67,15 @@ export default async function PortfolioItemPage({
   const socialMediaPostUrls = item.socialMediaPosts?.filter((post: any) => post && post.asset).map((post: any) => ({
     url: urlFor(post).width(800).height(800).url(),
     alt: post.alt || 'Social media post',
-    platform: post.platform || 'Social Media'
+    platform: post.platform || 'Social Media',
+    caption: post.caption || '',
+    postUrl: post.postUrl || ''
   })) || [];
+
+  // Generate URL for Instagram profile picture
+  const instagramProfilePicUrl = item.instagramProfilePicture
+    ? urlFor(item.instagramProfilePicture).width(200).height(200).url()
+    : undefined;
 
   // Generate URLs for SEO metrics
   const seoBeforeUrl = item.seoMetrics?.beforeScreenshot
@@ -317,74 +325,31 @@ export default async function PortfolioItemPage({
               )}
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {socialMediaPostUrls.map((post: any, index: number) => (
-                  <div key={index} className="bg-white rounded-lg shadow-lg overflow-hidden">
-                    {/* Social Post Header */}
-                    <div className="p-4 border-b border-gray-200">
-                      <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[#8DB1B6] to-[#5D878C] flex items-center justify-center text-white font-bold">
-                          {item.client.charAt(0).toUpperCase()}
-                        </div>
-                        <div>
-                          <p className="font-semibold text-sm text-gray-900">{item.client}</p>
-                          <p className="text-xs text-gray-500">{post.platform}</p>
-                        </div>
-                      </div>
-                    </div>
-                    {/* Post Image */}
-                    <div className="aspect-square overflow-hidden bg-gray-100">
-                      <img
-                        src={post.url}
-                        alt={post.alt}
-                        className="w-full h-full object-cover"
-                      />
-                    </div>
-                    {/* Post Actions */}
-                    <div className="p-4">
-                      <div className="flex items-center gap-4">
-                        <svg className="w-6 h-6 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
-                        </svg>
-                        <svg className="w-6 h-6 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
-                        </svg>
-                      </div>
-                    </div>
-                  </div>
+                  <InstagramPost
+                    key={index}
+                    imageUrl={post.url}
+                    alt={post.alt}
+                    profilePictureUrl={instagramProfilePicUrl}
+                    username={item.instagramHandle}
+                    displayName={item.client}
+                    isVerified={item.isInstagramVerified || false}
+                    caption={post.caption}
+                    postUrl={post.postUrl}
+                  />
                 ))}
               </div>
               {socialMediaPostUrls.length === 0 && validImages.length > 0 && (
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                   {validImages.map((image: any, index: number) => (
-                    <div key={index} className="bg-white rounded-lg shadow-lg overflow-hidden">
-                      <div className="p-4 border-b border-gray-200">
-                        <div className="flex items-center gap-3">
-                          <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[#8DB1B6] to-[#5D878C] flex items-center justify-center text-white font-bold">
-                            {item.client.charAt(0).toUpperCase()}
-                          </div>
-                          <div>
-                            <p className="font-semibold text-sm text-gray-900">{item.client}</p>
-                            <p className="text-xs text-gray-500">Social Media Post</p>
-                          </div>
-                        </div>
-                      </div>
-                      <div className="aspect-square overflow-hidden bg-gray-100">
-                        <img
-                          src={urlFor(image).width(800).height(800).url()}
-                          alt={image.alt || `${item.title} post ${index + 1}`}
-                          className="w-full h-full object-cover"
-                        />
-                      </div>
-                      <div className="p-4">
-                        <div className="flex items-center gap-4">
-                          <svg className="w-6 h-6 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
-                          </svg>
-                          <svg className="w-6 h-6 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
-                          </svg>
-                        </div>
-                      </div>
-                    </div>
+                    <InstagramPost
+                      key={index}
+                      imageUrl={urlFor(image).width(800).height(800).url()}
+                      alt={image.alt || `${item.title} post ${index + 1}`}
+                      profilePictureUrl={instagramProfilePicUrl}
+                      username={item.instagramHandle}
+                      displayName={item.client}
+                      isVerified={item.isInstagramVerified || false}
+                    />
                   ))}
                 </div>
               )}

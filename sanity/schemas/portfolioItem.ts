@@ -273,6 +273,48 @@ export default defineType({
       },
     }),
     defineField({
+      name: 'instagramHandle',
+      title: 'Instagram Username',
+      type: 'string',
+      description: 'Instagram username (without @) for this client',
+      placeholder: 'username',
+      validation: (Rule) => Rule.custom((value) => {
+        if (!value) return true; // Optional field
+        if (value.startsWith('@')) {
+          return 'Do not include @ symbol';
+        }
+        return true;
+      }),
+      hidden: ({ document }) => {
+        const services = document?.servicesProvided as string[] | undefined;
+        return !services?.includes('social-media');
+      },
+    }),
+    defineField({
+      name: 'instagramProfilePicture',
+      title: 'Instagram Profile Picture',
+      type: 'image',
+      description: 'Instagram profile picture (fetched from API or manually uploaded)',
+      options: {
+        hotspot: true,
+      },
+      hidden: ({ document }) => {
+        const services = document?.servicesProvided as string[] | undefined;
+        return !services?.includes('social-media');
+      },
+    }),
+    defineField({
+      name: 'isInstagramVerified',
+      title: 'Instagram Verified Account',
+      type: 'boolean',
+      description: 'Does this Instagram account have a blue checkmark?',
+      initialValue: false,
+      hidden: ({ document }) => {
+        const services = document?.servicesProvided as string[] | undefined;
+        return !services?.includes('social-media');
+      },
+    }),
+    defineField({
       name: 'socialMediaPosts',
       title: 'Social Media Posts',
       type: 'array',
@@ -298,6 +340,19 @@ export default defineType({
               options: {
                 list: ['Instagram', 'Facebook', 'Twitter/X', 'LinkedIn', 'TikTok', 'Other']
               }
+            },
+            {
+              name: 'caption',
+              type: 'text',
+              title: 'Post Caption',
+              description: 'The caption/text for this post (makes it look authentic)',
+              rows: 3,
+            },
+            {
+              name: 'postUrl',
+              type: 'url',
+              title: 'Link to Original Post',
+              description: 'URL to the actual Instagram/social media post (optional)',
             },
           ],
         },
