@@ -25,15 +25,7 @@ export const metadata: Metadata = {
     siteName: 'The First Coastal',
     title: 'The First Coastal - Web Design & Development in Northeast Florida',
     description: 'Northeast Florida web design, development, SEO & strategy. Helping Jacksonville, St. Augustine & First Coast businesses build smarter digital solutions.',
-    images: [
-      {
-        url: 'https://thefirstcoastal.com/og-image.png',
-        width: 1200,
-        height: 630,
-        alt: 'The First Coastal - Web Design & Development',
-        type: 'image/png',
-      },
-    ],
+    images: 'https://thefirstcoastal.com/og-image.png',
   },
   twitter: {
     card: 'summary_large_image',
