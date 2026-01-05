@@ -1,11 +1,22 @@
 import Link from 'next/link';
 import Image from 'next/image';
+import { Metadata } from 'next';
 import { getServices } from '@/lib/sanity';
 import HowWeWork from '@/components/HowWeWork';
 import WhoWeHelp from '@/components/WhoWeHelp';
 import WhyFirstCoastal from '@/components/WhyFirstCoastal';
 import LocalFocus from '@/components/LocalFocus';
 import CommonProblems from '@/components/CommonProblems';
+
+export const metadata: Metadata = {
+  title: 'The First Coastal - Web Design & Development in Northeast Florida',
+  description: 'Northeast Florida web design, development, SEO & strategy. Helping Jacksonville, St. Augustine & First Coast businesses build smarter digital solutions.',
+  openGraph: {
+    title: 'The First Coastal - Web Design & Development in Northeast Florida',
+    description: 'Northeast Florida web design, development, SEO & strategy. Helping Jacksonville, St. Augustine & First Coast businesses build smarter digital solutions.',
+    url: 'https://thefirstcoastal.com',
+  },
+};
 
 export default async function Home() {
   const services = await getServices();

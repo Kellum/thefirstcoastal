@@ -12,9 +12,45 @@ const montserrat = Montserrat({
 });
 
 export const metadata: Metadata = {
-  title: 'The First Coastal - Web Design & Development in Northeast Florida',
-  description: 'We help Northeast Florida businesses make better decisions about their online presence. Web design, development, SEO, and strategy consulting.',
-  keywords: 'web design, web development, SEO, digital strategy, Northeast Florida, First Coast, Jacksonville, St. Augustine',
+  metadataBase: new URL('https://thefirstcoastal.com'),
+  title: {
+    default: 'The First Coastal - Web Design & Development in Northeast Florida',
+    template: '%s | The First Coastal',
+  },
+  description: 'Northeast Florida web design, development, SEO & strategy. Helping Jacksonville, St. Augustine & First Coast businesses build smarter digital solutions.',
+  openGraph: {
+    type: 'website',
+    locale: 'en_US',
+    url: 'https://thefirstcoastal.com',
+    siteName: 'The First Coastal',
+    title: 'The First Coastal - Web Design & Development in Northeast Florida',
+    description: 'Northeast Florida web design, development, SEO & strategy. Helping Jacksonville, St. Augustine & First Coast businesses build smarter digital solutions.',
+    images: [
+      {
+        url: '/og-image.png',
+        width: 1200,
+        height: 630,
+        alt: 'The First Coastal - Web Design & Development',
+      },
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'The First Coastal - Web Design & Development in Northeast Florida',
+    description: 'Northeast Florida web design, development, SEO & strategy. Helping Jacksonville, St. Augustine & First Coast businesses build smarter digital solutions.',
+    images: ['/og-image.png'],
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+    },
+  },
 };
 
 export default function RootLayout({
