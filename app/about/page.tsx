@@ -25,7 +25,7 @@ export default function About() {
               Most businesses face the same problem: they know they need a better online presence, but they don&apos;t know what that actually means or how to get there. So they end up spending money on things that sound good but don&apos;t solve their actual problems.
             </p>
             <p>
-              We started The First Coastal to fix that. We help businesses in Northeast Florida—from Jacksonville to St. Augustine—figure out what they really need, avoid the expensive mistakes, and build digital solutions that actually work for their specific situation.
+              We started The First Coastal to fix that. We help businesses in Northeast Florida—from Fernandina and Jacksonville to St. Augustine—figure out what they really need, avoid the expensive mistakes, and build digital solutions that actually work for their specific situation.
             </p>
             <p>
               Sometimes that means building a new website. Sometimes it means fixing the one you have. Sometimes it means realizing you don&apos;t need what you thought you needed. We&apos;ll tell you the truth, even if it means less work for us.

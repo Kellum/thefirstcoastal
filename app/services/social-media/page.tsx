@@ -128,7 +128,7 @@ export default function SocialMedia() {
               Social media management works best as an ongoing partnership. We learn your business, your voice, and what resonates with your audience over time.
             </p>
             <p className="text-lg text-gray-700 mb-4 leading-relaxed">
-              <span className="font-semibold text-[#222326]">Most clients invest between $1,200-$6,000</span> depending on how many platforms, how often you post, and whether you need content creation or just management.
+              Projects start at $1,000+ depending on how many platforms, how often you post, and whether you need content creation or just management.
             </p>
             <p className="text-lg text-gray-700 mb-8 leading-relaxed">
               Let&apos;s talk about where you are now and what you&apos;re trying to accomplish. We&apos;ll figure out a plan that makes sense for your business and budget.

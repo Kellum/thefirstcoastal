@@ -151,7 +151,7 @@ export default function WebsiteSolutions() {
               We don&apos;t list specific prices because honestly, it depends. A simple brochure site is different from e-commerce. A redesign is different from starting from scratch.
             </p>
             <p className="text-lg text-gray-700 mb-4 leading-relaxed">
-              <span className="font-semibold text-[#222326]">Most clients invest between $1,200-$6,000</span> depending on what they need. But your budget shouldn&apos;t disqualify you—we work with businesses at different stages.
+              Most clients invest between $1,200-$6,000 depending on what they need. <span className="font-semibold text-[#222326]">But your budget shouldn&apos;t disqualify you</span>—we work with businesses at different stages.
             </p>
             <p className="text-lg text-gray-700 mb-8 leading-relaxed">
               Book a free 30-minute call and we&apos;ll tell you straight up what&apos;s possible for your situation. If we can&apos;t help, we&apos;ll point you toward someone who can.

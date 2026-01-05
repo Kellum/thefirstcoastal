@@ -14,7 +14,7 @@ export default function StrategyConsulting() {
           <h1 className="text-5xl md:text-6xl font-bold text-[#222326] mb-4">Strategy & Consulting</h1>
           <p className="text-2xl text-coastal mb-6 italic">Figure Out What You Need Before You Spend Money</p>
           <p className="text-xl text-gray-700 leading-relaxed">
-            Sometimes the best thing we can do is help you think through the problem before building anything. We offer standalone strategy sessions for businesses who want clarity before commitment.
+            Sometimes the best thing we can do is help you think through the problem before building anything. We offer standalone strategy sessions for businesses who want clarity before commitment. <span className="font-bold underline">An hour or two of strategic thinking often saves thousands in misdirected effort.</span>
           </p>
         </div>
       </section>
@@ -115,7 +115,7 @@ export default function StrategyConsulting() {
               Strategy sessions are simple. We talk, we review what you&apos;ve got, and we give you an honest assessment. No sales pitch, no pressure to hire us for anything else.
             </p>
             <p className="text-lg text-gray-700 mb-4 leading-relaxed">
-              <span className="font-semibold text-[#222326]">Most clients invest between $1,200-$6,000</span> depending on the scope. An hour or two of strategic thinking often saves thousands in misdirected effort.
+              <span className="font-semibold text-[#222326]">Most clients invest between $1,200-$6,000</span> depending on the scope. Like we mentioned before, an hour or two of strategic thinking often saves thousands in misdirected effort.
             </p>
             <p className="text-lg text-gray-700 mb-8 leading-relaxed">
               Book a free 30-minute call first. We&apos;ll figure out if a strategy session makes sense for you, or if you&apos;re better off jumping straight into building something.
