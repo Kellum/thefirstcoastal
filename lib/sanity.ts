@@ -86,7 +86,16 @@ export async function getPortfolioItem(slug: string) {
       desktopScreenshot,
       mobileScreenshot,
       socialMediaDescription,
-      socialMediaPosts,
+      socialMediaPosts[]{
+        ...,
+        caption,
+        postUrl,
+        platform,
+        alt
+      },
+      instagramHandle,
+      instagramProfilePicture,
+      isInstagramVerified,
       seoDescription,
       seoMetrics,
       brandingDescription,
