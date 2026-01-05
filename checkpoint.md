@@ -1,12 +1,56 @@
 # Development Checkpoint - January 5, 2026
 
-## Session: Contact Form & Responsive Design
+## Current Session: API Key Security & Production Debugging
+
+**Tags:** `#security` `#mailersend` `#production` `#debugging` `#railway`
+
+---
+
+## Previous Session: Contact Form & Responsive Design
 
 **Tags:** `#contact-form` `#mailersend` `#responsive` `#ui` `#ux` `#email`
 
 ---
 
-## Session Goals
+## Current Session Summary
+
+### What Happened
+After deploying the contact form, MailerSend detected the old API key was exposed in the public git repository (specifically in `checkpoint.md`). The key needed to be rotated and the production deployment updated.
+
+### Issues Resolved
+1. **API Key Exposure** - Old key revoked, new key generated and secured
+2. **Git Security** - Strengthened `.gitignore` to prevent future `.env` file commits
+3. **Production 500 Error** - Contact form failing on Railway due to stale environment variable
+
+### How It Was Fixed
+1. Revoked old API key in MailerSend dashboard
+2. Generated new API key: `mlsn.7e0cd33e09105554f7894145814c0437879ffffb81a827c7a9a56b5787f6ddc9`
+3. Updated `.env.local` with new key
+4. Improved `.gitignore` to explicitly protect all `.env` variations
+5. Added detailed error logging to contact API route
+6. Tested locally - confirmed working
+7. **Railway quirk discovered:** Updating environment variable in-place didn't work
+8. **Solution:** Deleted and re-added `MAILERSEND_API_KEY` variable in Railway
+9. Form now working on production
+
+### Files Modified
+- `.gitignore` - Strengthened env file protection
+- `.env.local` - Updated API key (not committed)
+- `app/api/contact/route.ts` - Added detailed error logging
+- `checkpoint.md` - Documented new session
+
+### Key Learnings
+- **Railway environment variable updates:** Sometimes need to delete/re-add instead of editing in place
+- **API key in checkpoints:** Never include actual API keys in documentation files
+- **Local testing first:** Confirms the code works before debugging production issues
+
+### Git Commits
+1. `9d954a7` - "Strengthen .gitignore to prevent .env file exposure"
+2. `a304964` - "Add detailed error logging to contact API route"
+
+---
+
+## Previous Session Goals
 
 1. Complete mobile layout fix for contact form
 2. Implement MailerSend email integration for contact form
